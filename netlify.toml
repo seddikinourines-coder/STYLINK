@@ -1,0 +1,3 @@
+[build]
+  command = "pnpm --filter @workspace/stylink run build"
+  publish = "artifacts/stylink/dist/public"
