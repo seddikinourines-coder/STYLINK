@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "STYLINK"
+version = "1.0.0"
+id = "artifacts/stylink"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25701
+
+[services.development]
+run = "pnpm --filter @workspace/stylink run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/stylink", "run", "build" ]
+publicDir = "artifacts/stylink/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25701"
+BASE_PATH = "/"

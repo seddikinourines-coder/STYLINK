@@ -1,0 +1,111 @@
+Build a "Invite to Project" feature inside a My Network page for a fashion collaboration platform.
+
+FRONTEND COMPONENTS:
+
+1. Member Card:
+- Show:
+  - Profile image
+  - Name
+  - Role (Designer / Atelier / Boutique / Fabric Supplier)
+
+- Buttons:
+  - Connect
+  - Message
+  - ⭐ Invite to Project
+
+--------------------------------------------------
+
+2. When clicking "Invite to Project":
+
+Open a MODAL (popup window):
+
+Modal Content:
+- Title: "Invite to Project"
+
+- Dropdown: Select Project
+  (Example projects: "Summer Collection", "Streetwear 2026")
+
+- Textarea:
+  Placeholder: "Add a message (optional)"
+
+- Buttons:
+  - Send Invitation
+  - Cancel
+
+--------------------------------------------------
+
+3. When clicking "Send Invitation":
+
+- Close modal
+- Show confirmation toast:
+  "Invitation sent successfully"
+
+- Simulate sending a notification to the invited user
+
+--------------------------------------------------
+
+4. Notifications System (UI Simulation):
+
+Create a Notifications Panel (icon in navbar 🔔)
+
+When a user receives an invitation, show:
+
+Card:
+- "[Your Name] invited you to join 'Summer Collection'"
+
+Buttons:
+- Accept
+- Decline
+
+--------------------------------------------------
+
+5. When user clicks "Accept":
+
+- Add user to the project collaborators list
+- Show confirmation:
+  "You joined the project"
+
+- Project now appears in their dashboard
+
+--------------------------------------------------
+
+6. When user clicks "Decline":
+
+- Remove notification
+- Show message:
+  "Invitation declined"
+
+--------------------------------------------------
+
+7. Project Integration:
+
+Create a Project Page:
+
+- Show:
+  - Project Name
+  - List of collaborators
+
+When user accepts invitation:
+→ Automatically add them to this list
+
+--------------------------------------------------
+
+STYLE:
+
+- Clean modern UI
+- Rounded cards
+- Soft shadows
+- Smooth animations (modal + hover)
+- Professional look (LinkedIn + Notion style)
+
+--------------------------------------------------
+
+IMPORTANT:
+
+- Use React components
+- Use state management (useState) to simulate:
+  - Invitations
+  - Notifications
+  - Accepted users
+
+- No backend needed (simulate logic in frontend)

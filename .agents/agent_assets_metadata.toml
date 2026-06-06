@@ -1,0 +1,655 @@
+uploads = []
+
+[[generated]]
+id = "9zZZu7ffDiceGlvufd_JU"
+uri = "file://artifacts/stylink/src/assets/images/hero.png"
+type = "image"
+title = "stylink hero runway"
+
+[[generated]]
+id = "q483wFdBhJky9zg-WKCNd"
+uri = "file://artifacts/stylink/src/assets/images/profile-1.png"
+type = "image"
+title = "Haute couture detail"
+
+[[generated]]
+id = "roSEGKQHSCl9FxfxBiOEe"
+uri = "file://artifacts/stylink/src/assets/images/profile-2.png"
+type = "image"
+title = "Wedding dress lacework"
+
+[[generated]]
+id = "Qaw7E4BMr_j2oH_20Ar-p"
+uri = "file://artifacts/stylink/src/assets/images/profile-3.png"
+type = "image"
+title = "Premium silk textures"
+
+[[generated]]
+id = "xm2QUyqYvT7OEnGmtbJ8e"
+uri = "file://artifacts/stylink/src/assets/images/profile-4.png"
+type = "image"
+title = "Modern ready to wear"
+
+[[generated]]
+id = "dAfBIn-NDA_yeOHBHLO6B"
+uri = "file://artifacts/stylink/src/assets/images/profile-5.png"
+type = "image"
+title = "Traditional embroidery twist"
+
+[[generated]]
+id = "BBcnz--nXyIjwDXDn7LTq"
+uri = "file://artifacts/stylink/src/assets/images/profile-6.png"
+type = "image"
+title = "Luxury brocade fabric"
+
+[[generated]]
+id = "-5UDZpm9xrjwm0Szo3YGr"
+uri = "file://artifacts/stylink/src/assets/images/profile-7.png"
+type = "image"
+title = "Elegant evening wear"
+
+[[generated]]
+id = "V_Kvt_VrLMa_MvhXr-iev"
+uri = "file://artifacts/stylink/src/assets/images/profile-8.png"
+type = "image"
+title = "Kabyle luxury styling"
+
+[[generated]]
+id = "bkgR11rKfbXCxPrZhTsIv"
+uri = "file://artifacts/stylink/src/assets/images/product-caftan-1.png"
+type = "image"
+title = "Red Caftan Product"
+
+[[generated]]
+id = "Z2amD8g3hoI_gFzwxt41m"
+uri = "file://artifacts/stylink/src/assets/images/product-karakou-1.png"
+type = "image"
+title = "White Karakou Product"
+
+[[generated]]
+id = "i_oov_07W4x6tnUoWeUp_"
+uri = "file://artifacts/stylink/src/assets/images/product-jewelry-1.png"
+type = "image"
+title = "Gold Jewelry Set"
+
+[[generated]]
+id = "hoRauJqi66GEsLaVk554l"
+uri = "file://artifacts/stylink/src/assets/images/product-fabric-1.png"
+type = "image"
+title = "Silk Fabric"
+
+[[generated]]
+id = "Z2PipOXQPg9oZ1VQH_1LM"
+uri = "file://artifacts/stylink/src/assets/images/designer-cover-1.png"
+type = "image"
+title = "Designer Profile Cover 1"
+
+[[generated]]
+id = "y8RpvIbriZlqX5n8fORDT"
+uri = "file://artifacts/stylink/src/assets/images/designer-cover-2.png"
+type = "image"
+title = "Designer Profile Cover 2"
+
+[[generated]]
+id = "BNkW85BhthbDv0D3_YSSO"
+uri = "file://attached_assets/demo/profile_nour_couture.png"
+type = "image"
+title = "Nour Couture profile"
+
+[[generated]]
+id = "KrNc7ojLDlxVMjpT-F4cY"
+uri = "file://attached_assets/demo/profile_zina_atelier.png"
+type = "image"
+title = "Zina Atelier profile"
+
+[[generated]]
+id = "gD9M9sZXFXZCH_HYIh2s4"
+uri = "file://attached_assets/demo/profile_tafat.png"
+type = "image"
+title = "Tafat Creations profile"
+
+[[generated]]
+id = "uxqzrll-plz95lL5yQQfp"
+uri = "file://attached_assets/demo/profile_rania_mode.png"
+type = "image"
+title = "Rania Mode profile"
+
+[[generated]]
+id = "B1Ate20SCsP1a7BN76Ss5"
+uri = "file://attached_assets/demo/profile_widad_fashion.png"
+type = "image"
+title = "Widad Fashion profile"
+
+[[generated]]
+id = "MO2JPsUn7j5rgQGYc2vxd"
+uri = "file://attached_assets/demo/article_caftan_andalou.png"
+type = "image"
+title = "Caftan Andalou borde"
+
+[[generated]]
+id = "howWIKFxlkgI3gpvMjrWm"
+uri = "file://attached_assets/demo/article_robe_soiree_oran.png"
+type = "image"
+title = "Robe de soiree oranaise"
+
+[[generated]]
+id = "Wq9eUQx3PMsj0a5ldX_fb"
+uri = "file://attached_assets/demo/article_haik.png"
+type = "image"
+title = "Ensemble haik festif"
+
+[[generated]]
+id = "rLQ7aSa9r8sGTrhOOkTSq"
+uri = "file://attached_assets/demo/article_karakou.png"
+type = "image"
+title = "Karakou Constantine"
+
+[[generated]]
+id = "9wToS0BaopQeyJ9u_IMIm"
+uri = "file://attached_assets/demo/article_jupe_soie.png"
+type = "image"
+title = "Jupe en soie doree"
+
+[[outputs]]
+id = "BjFTusooIl1eWvYv6xk3x"
+uri = "file://attached_assets/stock_images/test_1.jpg"
+type = "image"
+title = "fashion boutique interior"
+
+[[outputs]]
+id = "lFDvWXbasKwkcSEUnzP0j"
+uri = "file://attached_assets/stock_images/test_2.jpg"
+type = "image"
+title = "fashion boutique interior"
+
+[[outputs]]
+id = "vHalGFxR6giv3MaITsmsR"
+uri = "file://attached_assets/stock_images/test_3.jpg"
+type = "image"
+title = "fashion boutique interior"
+
+[[outputs]]
+id = "U3wfZwfX5gSsrL2-qmkgd"
+uri = "file://attached_assets/stock_images/atelier_1.jpg"
+type = "image"
+title = "couture sewing atelier workshop"
+
+[[outputs]]
+id = "wKK4upA0fYoxR_rBzmRi8"
+uri = "file://attached_assets/stock_images/atelier_2.jpg"
+type = "image"
+title = "couture sewing atelier workshop"
+
+[[outputs]]
+id = "BQ1dQaPpJuu0PaO9LY1vg"
+uri = "file://attached_assets/stock_images/atelier_3.jpg"
+type = "image"
+title = "couture sewing atelier workshop"
+
+[[outputs]]
+id = "lO1doCjtOy4VSL-9_tSXU"
+uri = "file://attached_assets/stock_images/atelier_4.jpg"
+type = "image"
+title = "couture sewing atelier workshop"
+
+[[outputs]]
+id = "B3pQnFjFw7UsJkM8a_Dt9"
+uri = "file://attached_assets/stock_images/atelier_5.jpg"
+type = "image"
+title = "couture sewing atelier workshop"
+
+[[outputs]]
+id = "hxuaTvzrL7K3st2-np9WG"
+uri = "file://attached_assets/stock_images/atelier_6.jpg"
+type = "image"
+title = "couture sewing atelier workshop"
+
+[[outputs]]
+id = "TWyahzU1LOgREKyrcbtlE"
+uri = "file://attached_assets/stock_images/atelier_7.jpg"
+type = "image"
+title = "couture sewing atelier workshop"
+
+[[outputs]]
+id = "EHF6Q9oJG1YCcBndk7Kha"
+uri = "file://attached_assets/stock_images/atelier_8.jpg"
+type = "image"
+title = "couture sewing atelier workshop"
+
+[[outputs]]
+id = "qkeJqKb1dY2etBTwon8iy"
+uri = "file://attached_assets/stock_images/atelier_9.jpg"
+type = "image"
+title = "couture sewing atelier workshop"
+
+[[outputs]]
+id = "flfkT9LZ-5ppRg11Ne9-I"
+uri = "file://attached_assets/stock_images/atelier_10.jpg"
+type = "image"
+title = "couture sewing atelier workshop"
+
+[[outputs]]
+id = "K2k5jj2Xrb4xHNXicxfJ7"
+uri = "file://attached_assets/stock_images/boutique_1.jpg"
+type = "image"
+title = "luxury fashion boutique interior"
+
+[[outputs]]
+id = "Kgk79GTq81JtSmr76O2gG"
+uri = "file://attached_assets/stock_images/boutique_2.jpg"
+type = "image"
+title = "luxury fashion boutique interior"
+
+[[outputs]]
+id = "gjiYM46F7fMYF-Dc8ZQRi"
+uri = "file://attached_assets/stock_images/boutique_3.jpg"
+type = "image"
+title = "luxury fashion boutique interior"
+
+[[outputs]]
+id = "FNVYX-Wg8XmHOY-XIXkqF"
+uri = "file://attached_assets/stock_images/boutique_4.jpg"
+type = "image"
+title = "luxury fashion boutique interior"
+
+[[outputs]]
+id = "WHpgkQ6wRJeJYZb_4wwSB"
+uri = "file://attached_assets/stock_images/boutique_5.jpg"
+type = "image"
+title = "luxury fashion boutique interior"
+
+[[outputs]]
+id = "Eqf24q7P0E5MnQb3ItHOh"
+uri = "file://attached_assets/stock_images/boutique_6.jpg"
+type = "image"
+title = "luxury fashion boutique interior"
+
+[[outputs]]
+id = "dkVUbDjkkojeTmzu7QPZ6"
+uri = "file://attached_assets/stock_images/boutique_7.jpg"
+type = "image"
+title = "luxury fashion boutique interior"
+
+[[outputs]]
+id = "0UNdfrcbxE3ZLxXzzFPlM"
+uri = "file://attached_assets/stock_images/boutique_8.jpg"
+type = "image"
+title = "luxury fashion boutique interior"
+
+[[outputs]]
+id = "7ePrqH5GHQmCkpG502Yon"
+uri = "file://attached_assets/stock_images/boutique_9.jpg"
+type = "image"
+title = "luxury fashion boutique interior"
+
+[[outputs]]
+id = "UKkFVsWcZLuxrEqeML_eE"
+uri = "file://attached_assets/stock_images/boutique_10.jpg"
+type = "image"
+title = "luxury fashion boutique interior"
+
+[[outputs]]
+id = "ASKRzoZv-BLxx8h0Uy7DD"
+uri = "file://attached_assets/stock_images/designer_1.jpg"
+type = "image"
+title = "fashion designer portrait studio"
+
+[[outputs]]
+id = "bCFoYCsSccYcvDRoJI1G0"
+uri = "file://attached_assets/stock_images/designer_2.jpg"
+type = "image"
+title = "fashion designer portrait studio"
+
+[[outputs]]
+id = "VOLm2C6y1LF5KHuzEA46p"
+uri = "file://attached_assets/stock_images/designer_3.jpg"
+type = "image"
+title = "fashion designer portrait studio"
+
+[[outputs]]
+id = "ddBbFPAMcU_Cwc11syjqR"
+uri = "file://attached_assets/stock_images/designer_4.jpg"
+type = "image"
+title = "fashion designer portrait studio"
+
+[[outputs]]
+id = "hWss6f4bEOlE8a7WD_nLj"
+uri = "file://attached_assets/stock_images/designer_5.jpg"
+type = "image"
+title = "fashion designer portrait studio"
+
+[[outputs]]
+id = "IW_qed-ZHKoFHXR-Rxfgm"
+uri = "file://attached_assets/stock_images/designer_6.jpg"
+type = "image"
+title = "fashion designer portrait studio"
+
+[[outputs]]
+id = "CTxw0qkvd21NoAoF2b5f6"
+uri = "file://attached_assets/stock_images/designer_7.jpg"
+type = "image"
+title = "fashion designer portrait studio"
+
+[[outputs]]
+id = "nNPn0Z9ETeLXzLcyE2CeR"
+uri = "file://attached_assets/stock_images/designer_8.jpg"
+type = "image"
+title = "fashion designer portrait studio"
+
+[[outputs]]
+id = "JaT7j-xpkuK79co0UN08J"
+uri = "file://attached_assets/stock_images/designer_9.jpg"
+type = "image"
+title = "fashion designer portrait studio"
+
+[[outputs]]
+id = "caoeT2SHm6kkNhYTEO31-"
+uri = "file://attached_assets/stock_images/designer_10.jpg"
+type = "image"
+title = "fashion designer portrait studio"
+
+[[outputs]]
+id = "9v0LvGkX9FH5hr0wMgh6p"
+uri = "file://attached_assets/stock_images/fabric_1.jpg"
+type = "image"
+title = "luxury fabric silk store rolls"
+
+[[outputs]]
+id = "DfvqxoYv3mDS4YsgPr_-h"
+uri = "file://attached_assets/stock_images/fabric_2.jpg"
+type = "image"
+title = "luxury fabric silk store rolls"
+
+[[outputs]]
+id = "PrDIKdQ7Dzj9afTblGlXJ"
+uri = "file://attached_assets/stock_images/fabric_3.jpg"
+type = "image"
+title = "luxury fabric silk store rolls"
+
+[[outputs]]
+id = "sEI6gUaU3QANiuM4jiXOG"
+uri = "file://attached_assets/stock_images/fabric_4.jpg"
+type = "image"
+title = "luxury fabric silk store rolls"
+
+[[outputs]]
+id = "AWMvTYs2GLQrD1uVoKcEc"
+uri = "file://attached_assets/stock_images/fabric_5.jpg"
+type = "image"
+title = "luxury fabric silk store rolls"
+
+[[outputs]]
+id = "vvtFqvjKag7Efj-CCPrK5"
+uri = "file://attached_assets/stock_images/fabric_6.jpg"
+type = "image"
+title = "luxury fabric silk store rolls"
+
+[[outputs]]
+id = "Mpr-dZJphd8pdW8SWDwQL"
+uri = "file://attached_assets/stock_images/fabric_7.jpg"
+type = "image"
+title = "luxury fabric silk store rolls"
+
+[[outputs]]
+id = "VUxQGb9Bhoy841MmHqXB-"
+uri = "file://attached_assets/stock_images/fabric_8.jpg"
+type = "image"
+title = "luxury fabric silk store rolls"
+
+[[outputs]]
+id = "aKo8DX3sOi7-9m8bowFQQ"
+uri = "file://attached_assets/stock_images/fabric_9.jpg"
+type = "image"
+title = "luxury fabric silk store rolls"
+
+[[outputs]]
+id = "5e5u9dOg323Dtgm_BTZeQ"
+uri = "file://attached_assets/stock_images/fabric_10.jpg"
+type = "image"
+title = "luxury fabric silk store rolls"
+
+[[outputs]]
+id = "EhmniebizDvbvc93GUOZN"
+uri = "file://attached_assets/stock_images/tailleur_1.jpg"
+type = "image"
+title = "tailored women suit fashion"
+
+[[outputs]]
+id = "lRIwLv82ddqPJIWqb_R-Y"
+uri = "file://attached_assets/stock_images/tailleur_2.jpg"
+type = "image"
+title = "tailored women suit fashion"
+
+[[outputs]]
+id = "6W5-9h-LP8EF-NNpdgfHr"
+uri = "file://attached_assets/stock_images/tailleur_3.jpg"
+type = "image"
+title = "tailored women suit fashion"
+
+[[outputs]]
+id = "9NHfJecl90QfZjk0D0Xk2"
+uri = "file://attached_assets/stock_images/tailleur_4.jpg"
+type = "image"
+title = "tailored women suit fashion"
+
+[[outputs]]
+id = "5itcOQt0VW4akzILpsKlN"
+uri = "file://attached_assets/stock_images/tailleur_5.jpg"
+type = "image"
+title = "tailored women suit fashion"
+
+[[outputs]]
+id = "fvfvDeTeTp0E4-Dwtq_H7"
+uri = "file://attached_assets/stock_images/tailleur_6.jpg"
+type = "image"
+title = "tailored women suit fashion"
+
+[[outputs]]
+id = "FIWPb0BSuQ7yh9OV_bLfp"
+uri = "file://attached_assets/stock_images/tailleur_7.jpg"
+type = "image"
+title = "tailored women suit fashion"
+
+[[outputs]]
+id = "cnmqJLZM1W_WXk2_2-zxy"
+uri = "file://attached_assets/stock_images/tailleur_8.jpg"
+type = "image"
+title = "tailored women suit fashion"
+
+[[outputs]]
+id = "2KQm5u-JS0-SUKyDrpsx0"
+uri = "file://attached_assets/stock_images/tailleur_9.jpg"
+type = "image"
+title = "tailored women suit fashion"
+
+[[outputs]]
+id = "0qzUfx1auOMuVG2znF7Fz"
+uri = "file://attached_assets/stock_images/robe_1.jpg"
+type = "image"
+title = "elegant evening dress fashion"
+
+[[outputs]]
+id = "P3TY5PCxi-v8_aRTQj0SB"
+uri = "file://attached_assets/stock_images/tailleur_10.jpg"
+type = "image"
+title = "tailored women suit fashion"
+
+[[outputs]]
+id = "J62hmTBSJ16_A7ZjQ6CIj"
+uri = "file://attached_assets/stock_images/robe_2.jpg"
+type = "image"
+title = "elegant evening dress fashion"
+
+[[outputs]]
+id = "hWkGfuH2PL0ttFISMF7hg"
+uri = "file://attached_assets/stock_images/robe_3.jpg"
+type = "image"
+title = "elegant evening dress fashion"
+
+[[outputs]]
+id = "qQm6vbKIksnHL9L92NXZZ"
+uri = "file://attached_assets/stock_images/robe_4.jpg"
+type = "image"
+title = "elegant evening dress fashion"
+
+[[outputs]]
+id = "Qq6_Lb0mXL9tyrdTT98_L"
+uri = "file://attached_assets/stock_images/robe_5.jpg"
+type = "image"
+title = "elegant evening dress fashion"
+
+[[outputs]]
+id = "CVvNbJJ1HzKlrnCVxjXJF"
+uri = "file://attached_assets/stock_images/robe_6.jpg"
+type = "image"
+title = "elegant evening dress fashion"
+
+[[outputs]]
+id = "O3xYJcvvguxKbVRakEcd2"
+uri = "file://attached_assets/stock_images/robe_7.jpg"
+type = "image"
+title = "elegant evening dress fashion"
+
+[[outputs]]
+id = "XR_XTJ8PemiTCU2j4IBD6"
+uri = "file://attached_assets/stock_images/robe_8.jpg"
+type = "image"
+title = "elegant evening dress fashion"
+
+[[outputs]]
+id = "hF0CcJquWnyqS_qjGlJvH"
+uri = "file://attached_assets/stock_images/robe_9.jpg"
+type = "image"
+title = "elegant evening dress fashion"
+
+[[outputs]]
+id = "Z3yYGxE8TW-xnTuZ7qMKz"
+uri = "file://attached_assets/stock_images/caftan_2.jpg"
+type = "image"
+title = "caftan moroccan dress embroidered"
+
+[[outputs]]
+id = "4NXeOOy4NzCa4cfkZ0yl_"
+uri = "file://attached_assets/stock_images/robe_10.jpg"
+type = "image"
+title = "elegant evening dress fashion"
+
+[[outputs]]
+id = "YS7jStdln0dCuRSJxEiWl"
+uri = "file://attached_assets/stock_images/caftan_3.jpg"
+type = "image"
+title = "caftan moroccan dress embroidered"
+
+[[outputs]]
+id = "kY9gqXKndPExWi4Y-yx9r"
+uri = "file://attached_assets/stock_images/caftan_4.jpg"
+type = "image"
+title = "caftan moroccan dress embroidered"
+
+[[outputs]]
+id = "SVT-zn0T1RONlEd-sx8Mm"
+uri = "file://attached_assets/stock_images/caftan_5.jpg"
+type = "image"
+title = "caftan moroccan dress embroidered"
+
+[[outputs]]
+id = "nNClE6dAsS460rUoJbi6Q"
+uri = "file://attached_assets/stock_images/caftan_6.jpg"
+type = "image"
+title = "caftan moroccan dress embroidered"
+
+[[outputs]]
+id = "J1ouZ3TLGkIu9G-v6_wVK"
+uri = "file://attached_assets/stock_images/caftan_7.jpg"
+type = "image"
+title = "caftan moroccan dress embroidered"
+
+[[outputs]]
+id = "ziXqGLvQavcTBwFgYFp9i"
+uri = "file://attached_assets/stock_images/caftan_8.jpg"
+type = "image"
+title = "caftan moroccan dress embroidered"
+
+[[outputs]]
+id = "2A-8mHpExacnGfVtXRlqy"
+uri = "file://attached_assets/stock_images/caftan_9.jpg"
+type = "image"
+title = "caftan moroccan dress embroidered"
+
+[[outputs]]
+id = "HYyTIhgqEi1U0iEaiSXIq"
+uri = "file://attached_assets/stock_images/caftan_10.jpg"
+type = "image"
+title = "caftan moroccan dress embroidered"
+
+[[outputs]]
+id = "rj8goqXd6QCkxZRxK_ZEl"
+uri = "file://attached_assets/stock_images/accessoire_1.jpg"
+type = "image"
+title = "luxury handbag jewelry accessory"
+
+[[outputs]]
+id = "eYlXj3EZnk_QX74zx-Ovu"
+uri = "file://attached_assets/stock_images/accessoire_2.jpg"
+type = "image"
+title = "luxury handbag jewelry accessory"
+
+[[outputs]]
+id = "DWE0vnO8wL6c_iZyai_q2"
+uri = "file://attached_assets/stock_images/accessoire_3.jpg"
+type = "image"
+title = "luxury handbag jewelry accessory"
+
+[[outputs]]
+id = "m_1AJZBQ7lcDP_kXUjteN"
+uri = "file://attached_assets/stock_images/accessoire_4.jpg"
+type = "image"
+title = "luxury handbag jewelry accessory"
+
+[[outputs]]
+id = "vTdCRxxNEcjDmKTzvxVdK"
+uri = "file://attached_assets/stock_images/accessoire_5.jpg"
+type = "image"
+title = "luxury handbag jewelry accessory"
+
+[[outputs]]
+id = "mc9huSPaWLNPl8ftt2yKc"
+uri = "file://attached_assets/stock_images/accessoire_6.jpg"
+type = "image"
+title = "luxury handbag jewelry accessory"
+
+[[outputs]]
+id = "EQmRug8OfmExEXA4pp4Zk"
+uri = "file://attached_assets/stock_images/accessoire_7.jpg"
+type = "image"
+title = "luxury handbag jewelry accessory"
+
+[[outputs]]
+id = "Ll5-NibcLVbf2ASyAmb0s"
+uri = "file://attached_assets/stock_images/accessoire_8.jpg"
+type = "image"
+title = "luxury handbag jewelry accessory"
+
+[[outputs]]
+id = "iomnyAPyEtJT-5ATDTe-B"
+uri = "file://attached_assets/stock_images/accessoire_9.jpg"
+type = "image"
+title = "luxury handbag jewelry accessory"
+
+[[outputs]]
+id = "H4jzSBw3aJKmETlGFYepE"
+uri = "file://attached_assets/stock_images/accessoire_10.jpg"
+type = "image"
+title = "luxury handbag jewelry accessory"
+
+[[outputs]]
+id = "xaCKWfeZSSqf59IoNIQqq"
+uri = "file://exports/stylink-website-built.zip"
+type = "unspecified"
+title = "STYLINK — Built Website (HTML / CSS / JS)"
+
+[[outputs]]
+id = "8o9CMt2L1L5hYivVyhkuV"
+uri = "file://exports/stylink-source-code.zip"
+type = "unspecified"
+title = "STYLINK — Source Code (for another AI to edit)"

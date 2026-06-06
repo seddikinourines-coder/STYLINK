@@ -1,0 +1,107 @@
+🎯 Core Concept: “Opportunity Feed”
+
+Instead of a classic marketplace, create a dynamic feed of opportunities where each actor posts what they need or offer.
+
+🧵 Feed Structure (Main Feature)
+
+Each post is an Opportunity Card with a luxury, editorial design.
+
+Types of Posts:
+Designer Post
+“Looking for an atelier specialized in evening wear”
+Attach sketches / moodboards
+Define:
+Budget range
+Quantity
+Timeline
+Atelier Post
+“Available capacity for 200 pieces this month”
+Showcase past work (portfolio)
+Specialties (tailoring, embroidery, etc.)
+Boutique Post
+“Looking for exclusive summer collection”
+Target audience, style references
+Option for private collaborations
+Fabric Retailer Post
+“New premium silk collection available”
+Stock + MOQ
+Visual catalog
+💎 Interaction System (Premium Feel)
+“Connect” instead of “Apply”
+“Private Request” instead of “Message”
+“Shortlist” instead of “Save”
+
+Users should feel like they are selecting partners, not just browsing.
+
+💬 Messaging Experience
+Clean, minimal, luxury chat UI
+Ability to:
+Share files (tech packs, fabrics)
+Send offers
+Turn conversation into a Deal Room
+🤝 Deal Room (High-End Feature)
+
+Once two parties agree:
+
+Create a private workspace
+Sections:
+Project overview
+Timeline (milestones)
+File sharing
+Payment stages
+Status tracking:
+Concept → Sampling → Production → Delivery
+🎯 Smart Matching (Discreet & Elegant)
+
+Instead of aggressive suggestions:
+
+“Suggested for you” (subtle)
+Based on:
+Style compatibility
+Past collaborations
+Production capacity
+🎨 UI/UX Direction (Luxury Feel)
+Minimalist, editorial layout (like a fashion magazine)
+Neutral colors (black, white, beige, gold accents)
+Large visuals (images first, text second)
+Smooth animations
+No clutter, no “cheap marketplace feeling”
+🔐 Exclusivity Layer
+Application-based onboarding (optional)
+Verified profiles (badge)
+Portfolio required for Designers & Ateliers
+📊 Profile Pages (Portfolio First)
+
+Each actor has a premium profile:
+
+Cover image (brand identity)
+Portfolio (grid or lookbook)
+Expertise tags
+Past collaborations
+Reviews (subtle, not aggressive)
+⚙️ Core Tech
+Feed system (like social media)
+Real-time messaging
+Role-based dashboards
+Media-heavy storage (images, videos)
+Tagging & filtering system
+🧠 Positioning
+
+This is NOT a marketplace like Alibaba.
+
+This is a private fashion network for serious collaborations, closer to:
+
+A digital showroom
+A sourcing network
+A collaboration studio
+📌 Deliverable
+
+Build a working prototype with:
+
+Feed page (opportunities)
+Post creation flow (per role)
+Messaging system
+Deal Room (basic version)
+Profile pages
+
+Focus on experience, not just functionality.

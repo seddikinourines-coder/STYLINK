@@ -1,0 +1,84 @@
+Build a full-stack B2B marketplace platform called Stylink B2B that connects four main user types:
+
+Boutiques (buyers of finished or custom clothing)
+Designers (create designs and collections)
+Ateliers (manufacture clothing)
+Fabric Retailers (sell fabrics and materials)
+🎯 Core Objective
+
+Create a collaborative ecosystem where boutiques can source designs, request custom production, and manage orders end-to-end — from design → fabric → production → delivery.
+
+👤 User Roles & Features
+1. Boutiques Dashboard
+Browse designer catalogs
+Request custom designs
+Place bulk orders
+Track production status (atelier progress)
+Chat with designers & ateliers
+Manage invoices & payments
+2. Designers Dashboard
+Upload collections (images, sketches, tech packs)
+Set pricing (per design or licensing)
+Receive collaboration requests
+Connect with ateliers for production
+Version control for designs
+3. Ateliers Dashboard
+Receive production requests
+Accept/refuse jobs
+Set capacity & timelines
+Update production stages:
+(Pending → In Production → Quality Check → Completed)
+Upload sample previews
+4. Fabric Retailers Dashboard
+List fabrics (type, color, stock, price)
+Enable bulk pricing
+Integrate fabric selection into design workflow
+Offer recommendations based on designs
+🔗 Key Features (Platform Logic)
+📦 Order Workflow
+Boutique selects design or requests custom
+Designer confirms or creates design
+Boutique selects fabric (or auto-suggested)
+Atelier is assigned or chosen
+Production begins with live tracking
+Final delivery + payment
+💬 Communication System
+Real-time chat between all parties
+File sharing (designs, measurements, references)
+📊 Smart Matching System
+Recommend:
+Designers based on boutique style
+Ateliers based on capacity/location
+Fabrics based on design needs
+📏 Measurement & Custom Orders
+Allow boutiques to submit size specs
+Provide a guided measurement form
+Option to upload size charts
+💳 Payments & Transactions
+Secure B2B payments
+Milestone-based payments:
+(Design approved → Production start → Delivery)
+🧠 Tech Requirements
+Frontend: React (modern UI dashboard)
+Backend: Node.js / Express
+Database: PostgreSQL
+Authentication: JWT-based with role management
+File storage: Cloud (for designs, images)
+Real-time: WebSockets for chat & tracking
+🎨 UI/UX Requirements
+Clean, modern fashion-tech design
+Dashboard-based navigation
+Clear workflow visualization (order tracking timeline)
+Mobile responsive
+⚙️ Bonus Features (if possible)
+AI design recommendations
+Trend analytics dashboard
+Rating/review system for ateliers & designers
+Multi-language (French / Arabic / English)
+📌 Deliverables
+Database schema
+API endpoints
+Frontend pages (per role)
+Functional prototype with mock data
+
+Focus on scalability, modular architecture, and real-world usability for the fashion supply chain.
