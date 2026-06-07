@@ -23,6 +23,12 @@ import {
   mockFeedPosts,
   type FeedPost,
 } from "@/data/mockData";
+import {
+  createFeedPost,
+  deleteFeedPost,
+  fetchFeedPosts,
+  updateFeedPost,
+} from "@/lib/feedApi";
 import { useB2BShell } from "@/components/b2b/B2BShellContext";
 import {
   DropdownMenu,
@@ -56,6 +62,7 @@ interface LocalComment {
 
 function PostCard({
   post,
+  isMe,
   liked,
   saved,
   onToggleLike,
@@ -75,6 +82,7 @@ function PostCard({
   onEdit,
 }: {
   post: FeedPost;
+  isMe: boolean;
   liked: boolean;
   saved: boolean;
   onToggleLike: () => void;
@@ -94,12 +102,12 @@ function PostCard({
   onEdit?: () => void;
 }) {
   const [, navigate] = useLocation();
-  const isMe = post.authorId === ME_AUTHOR_ID;
   const author = isMe ? undefined : getDesignerById(post.authorId);
 
-  const name = isMe ? meName : (author?.name ?? "Membre Stylink");
-  const roleKey = isMe ? "me" : (author?.type ?? "designer");
-  const role = isMe ? meRole : (designerTypeLabels[roleKey] ?? "Designer");
+  const name = isMe ? meName : (post.authorName ?? author?.name ?? "Membre Stylink");
+  const role = isMe
+    ? meRole
+    : post.authorRole ?? designerTypeLabels[author?.type ?? "designer"] ?? "Designer";
   const city = isMe ? undefined : author?.city;
   const avatarSrc = isMe ? undefined : author?.image;
   const initials = isMe
@@ -381,7 +389,8 @@ export default function FeedTab() {
   const [draft, setDraft] = useState("");
   const [draftImage, setDraftImage] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
-  const [composedPosts, setComposedPosts] = useState<FeedPost[]>([]);
+  const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
+  const [isLoadingFeed, setIsLoadingFeed] = useState(false);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editDraft, setEditDraft] = useState("");
   const [liked, setLiked] = useState<Record<string, boolean>>({});
@@ -405,9 +414,25 @@ export default function FeedTab() {
     return out;
   }, []);
 
+  useEffect(() => {
+    async function loadFeed() {
+      setIsLoadingFeed(true);
+      try {
+        const posts = await fetchFeedPosts();
+        setFeedPosts(posts);
+      } catch (error) {
+        console.error("Failed to load feed posts", error);
+      } finally {
+        setIsLoadingFeed(false);
+      }
+    }
+
+    loadFeed();
+  }, []);
+
   const allPosts = useMemo<FeedPost[]>(
-    () => [...composedPosts, ...baseFeed],
-    [composedPosts, baseFeed],
+    () => [...feedPosts, ...baseFeed],
+    [feedPosts, baseFeed],
   );
 
   const filtered = useMemo(() => {
@@ -417,6 +442,8 @@ export default function FeedTab() {
       const author = getDesignerById(p.authorId);
       return (
         p.body.toLowerCase().includes(q) ||
+        (p.authorName?.toLowerCase().includes(q) ?? false) ||
+        (p.authorRole?.toLowerCase().includes(q) ?? false) ||
         (author?.name.toLowerCase().includes(q) ?? false) ||
         (author?.specialty.toLowerCase().includes(q) ?? false) ||
         (author?.city.toLowerCase().includes(q) ?? false)
@@ -462,6 +489,7 @@ export default function FeedTab() {
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase() ?? "")
     .join("");
+  const myAuthorId = user ? `me-${user.email.trim().toLowerCase()}` : null;
 
   function pickImage() {
     fileInputRef.current?.click();
@@ -487,26 +515,43 @@ export default function FeedTab() {
     reader.readAsDataURL(file);
   }
 
-  function publish() {
+  async function publish() {
     const body = draft.trim();
     if (!body && !draftImage) return;
-    const post: FeedPost = {
-      id: `local-${Date.now()}`,
-      authorId: ME_AUTHOR_ID,
+
+    const authorId = myAuthorId ?? ME_AUTHOR_ID;
+    const postPayload = {
+      id: `feed-${Date.now()}`,
+      authorId,
+      authorName: myName,
+      authorRole: myRole,
       body: body || "",
       image: draftImage ?? undefined,
       timestamp: "à l'instant",
       likes: 0,
       comments: 0,
     };
-    setComposedPosts((prev) => [post, ...prev]);
-    setDraft("");
-    setDraftImage(null);
-    setImageError(null);
+
+    try {
+      const created = await createFeedPost({
+        id: postPayload.id,
+        authorId: postPayload.authorId,
+        authorName: postPayload.authorName,
+        authorRole: postPayload.authorRole,
+        body: postPayload.body,
+        image: postPayload.image,
+      });
+      setFeedPosts((prev) => [created, ...prev]);
+      setDraft("");
+      setDraftImage(null);
+      setImageError(null);
+    } catch (error) {
+      console.error("Failed to publish feed post", error);
+    }
   }
 
   function handleConnect(postId: string, authorId: string, authorName: string) {
-    if (authorId === ME_AUTHOR_ID) return;
+    if (authorId === ME_AUTHOR_ID || authorId === myAuthorId) return;
     if (pendingConnections.includes(authorId) || isConnected(authorId)) return;
     addPendingConnection(authorId);
     pushNotification({
@@ -519,7 +564,7 @@ export default function FeedTab() {
   }
 
   function handleProposeCollab(authorId: string) {
-    if (authorId === ME_AUTHOR_ID) return;
+    if (authorId === ME_AUTHOR_ID || authorId === myAuthorId) return;
     const params = new URLSearchParams({ with: authorId, context: "collaborate" });
     navigate(`/b2b/messages?${params.toString()}`);
   }
@@ -564,8 +609,13 @@ export default function FeedTab() {
     }
   }
 
-  function handleDeletePost(postId: string) {
-    setComposedPosts((prev) => prev.filter((p) => p.id !== postId));
+  async function handleDeletePost(postId: string) {
+    try {
+      await deleteFeedPost(postId);
+      setFeedPosts((prev) => prev.filter((p) => p.id !== postId));
+    } catch (error) {
+      console.error("Failed to delete feed post", error);
+    }
   }
 
   function handleStartEdit(postId: string, currentBody: string) {
@@ -573,14 +623,19 @@ export default function FeedTab() {
     setEditDraft(currentBody);
   }
 
-  function handleSaveEdit(postId: string) {
+  async function handleSaveEdit(postId: string) {
     const body = editDraft.trim();
     if (!body) return;
-    setComposedPosts((prev) =>
-      prev.map((p) => (p.id === postId ? { ...p, body } : p)),
-    );
-    setEditingPostId(null);
-    setEditDraft("");
+    try {
+      const updated = await updateFeedPost(postId, { body });
+      setFeedPosts((prev) =>
+        prev.map((p) => (p.id === postId ? { ...p, body: updated.body } : p)),
+      );
+      setEditingPostId(null);
+      setEditDraft("");
+    } catch (error) {
+      console.error("Failed to update feed post", error);
+    }
   }
 
   return (
@@ -686,9 +741,11 @@ export default function FeedTab() {
           </div>
         ) : (
           visiblePosts.map((post) => {
-            const isPostByMe = post.authorId === ME_AUTHOR_ID;
+            const isPostByMe =
+              post.authorId === ME_AUTHOR_ID || post.authorId === myAuthorId;
             const author = isPostByMe ? null : getDesignerById(post.authorId);
-            const authorName = author?.name ?? "Membre Stylink";
+            const authorName =
+              post.authorName ?? author?.name ?? "Membre Stylink";
             const isEditing = editingPostId === post.id;
             return (
               <div key={post.id}>
@@ -714,6 +771,7 @@ export default function FeedTab() {
                 ) : (
                   <PostCard
                     post={post}
+                    isMe={isPostByMe}
                     liked={!!liked[post.id]}
                     saved={!!saved[post.id]}
                     onToggleLike={() => handleToggleLike(post.id, isPostByMe)}

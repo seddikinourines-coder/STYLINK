@@ -1581,6 +1581,8 @@ export const mockOpportunities: Opportunity[] = [
 export interface FeedPost {
   id: string;
   authorId: string;
+  authorName?: string;
+  authorRole?: string;
   body: string;
   image?: string;
   timestamp: string;
