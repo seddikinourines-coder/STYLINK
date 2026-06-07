@@ -75,7 +75,8 @@ export const handler = async (event) => {
         return { statusCode: res.status, body: JSON.stringify(error) };
       }
 
-      const [record] = await res.json();
+      const payload = await res.json();
+      const record = Array.isArray(payload) ? payload[0] : payload;
       return {
         statusCode: 200,
         headers: { "Content-Type": "application/json" },
@@ -109,7 +110,8 @@ export const handler = async (event) => {
         const error = await res.json().catch(() => ({ error: res.statusText }));
         return { statusCode: res.status, body: JSON.stringify(error) };
       }
-      const [record] = await res.json();
+      const payload = await res.json();
+      const record = Array.isArray(payload) ? payload[0] : payload;
       return {
         statusCode: 200,
         headers: { "Content-Type": "application/json" },

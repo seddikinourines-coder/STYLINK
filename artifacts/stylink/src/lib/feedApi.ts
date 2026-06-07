@@ -47,6 +47,21 @@ export async function fetchFeedPosts(): Promise<FeedPost[]> {
   return Array.isArray(records) ? records.map(toFeedPost) : [];
 }
 
+function normalizeRecord(result: any) {
+  if (Array.isArray(result)) {
+    return result[0];
+  }
+  return result;
+}
+
+function requireRecord(result: any) {
+  const record = normalizeRecord(result);
+  if (!record || typeof record !== "object") {
+    throw new Error("Invalid feed post response from server.");
+  }
+  return record;
+}
+
 export async function createFeedPost(payload: {
   id: string;
   authorId: string;
@@ -63,10 +78,11 @@ export async function createFeedPost(payload: {
     body: payload.body,
     image: payload.image ?? null,
   };
-  const [record] = await request(API_BASE, {
+  const result = await request(API_BASE, {
     method: "POST",
     body: JSON.stringify(body),
   });
+  const record = requireRecord(result);
   return toFeedPost(record);
 }
 
@@ -78,11 +94,12 @@ export async function updateFeedPost(postId: string, patch: {
   if (patch.body !== undefined) payload.body = patch.body;
   if (patch.image !== undefined) payload.image = patch.image;
 
-  const [record] = await request(`${API_BASE}?id=eq.${encodeURIComponent(postId)}`, {
+  const result = await request(`${API_BASE}?id=eq.${encodeURIComponent(postId)}`, {
     method: "PATCH",
     body: JSON.stringify(payload),
   });
 
+  const record = requireRecord(result);
   return toFeedPost(record);
 }
 
