@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { useAppStore, type BusinessRole } from "@/contexts/AppStore";
 import {
   getDesignerById,
@@ -391,6 +392,7 @@ export default function FeedTab() {
   const [imageError, setImageError] = useState<string | null>(null);
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
   const [isLoadingFeed, setIsLoadingFeed] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editDraft, setEditDraft] = useState("");
   const [liked, setLiked] = useState<Record<string, boolean>>({});
@@ -483,6 +485,7 @@ export default function FeedTab() {
     : user.type === "business"
       ? user.brandName
       : user.name;
+  const { toast } = useToast();
   const myRole = isBusiness && user ? roleLabels[user.role] : "Membre";
   const initials = myName
     .split(/\s+/)
@@ -519,6 +522,7 @@ export default function FeedTab() {
     const body = draft.trim();
     if (!body && !draftImage) return;
 
+    setIsPublishing(true);
     const authorId = myAuthorId ?? ME_AUTHOR_ID;
     const postPayload = {
       id: `feed-${Date.now()}`,
@@ -545,8 +549,12 @@ export default function FeedTab() {
       setDraft("");
       setDraftImage(null);
       setImageError(null);
+      toast({ title: "Publication envoyée", description: "Votre post a bien été publié." });
     } catch (error) {
       console.error("Failed to publish feed post", error);
+      toast({ title: "Erreur", description: "Impossible de publier. Réessayez." });
+    } finally {
+      setIsPublishing(false);
     }
   }
 
@@ -711,14 +719,15 @@ export default function FeedTab() {
                   {draftImage ? "Changer l'image" : "Ajouter une image"}
                 </button>
                 <Button
+                  type="button"
                   size="sm"
                   onClick={publish}
-                  disabled={!draft.trim() && !draftImage}
+                  disabled={isPublishing || (!draft.trim() && !draftImage)}
                   className="rounded-full gap-1.5"
                   data-testid="button-publish-post"
                 >
                   <Send className="w-3.5 h-3.5" />
-                  Publier
+                  {isPublishing ? "Publication…" : "Publier"}
                 </Button>
               </div>
             </div>
