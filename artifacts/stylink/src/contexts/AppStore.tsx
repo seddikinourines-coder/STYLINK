@@ -110,6 +110,8 @@ interface AppState {
   createOpportunity: (
     o: Omit<Opportunity, "id" | "createdAt" | "status" | "authorId" | "authorRole">,
   ) => Opportunity | null;
+  deleteOpportunity: (opportunityId: string) => boolean;
+  editOpportunity: (opportunityId: string, patch: Partial<Pick<Opportunity, "title" | "description" | "tags" | "budgetMin" | "budgetMax" | "quantity" | "timeline" | "deadline">>) => boolean;
   closeOpportunity: (opportunityId: string) => boolean;
   toggleShortlist: (opportunityId: string) => void;
   isShortlisted: (opportunityId: string) => boolean;
@@ -561,6 +563,43 @@ export function AppStoreProvider({ children }: { children: ReactNode }) {
         }),
       );
       return didClose;
+    },
+    [user],
+  );
+
+  const deleteOpportunity = useCallback<AppState["deleteOpportunity"]>(
+    (opportunityId) => {
+      const meId = businessIdFor(user);
+      if (!meId) return false;
+      let didDelete = false;
+      setOpportunities((prev) => {
+        const next = prev.filter((o) => {
+          if (o.id !== opportunityId) return true;
+          if (o.authorId !== meId) return true;
+          didDelete = true;
+          return false;
+        });
+        return next;
+      });
+      return didDelete;
+    },
+    [user],
+  );
+
+  const editOpportunity = useCallback<AppState["editOpportunity"]>(
+    (opportunityId, patch) => {
+      const meId = businessIdFor(user);
+      if (!meId) return false;
+      let didEdit = false;
+      setOpportunities((prev) =>
+        prev.map((o) => {
+          if (o.id !== opportunityId) return o;
+          if (o.authorId !== meId) return o;
+          didEdit = true;
+          return { ...o, ...patch };
+        }),
+      );
+      return didEdit;
     },
     [user],
   );
@@ -1407,6 +1446,8 @@ export function AppStoreProvider({ children }: { children: ReactNode }) {
     currentBusinessId,
     createOpportunity,
     closeOpportunity,
+    deleteOpportunity,
+    editOpportunity,
     toggleShortlist,
     isShortlisted,
     connectOpportunity,

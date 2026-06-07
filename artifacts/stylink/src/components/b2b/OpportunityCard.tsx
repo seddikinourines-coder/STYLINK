@@ -6,6 +6,9 @@ import {
   Check,
   Clock,
   MessageCircle,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
   UserCheck,
   Users,
 } from "lucide-react";
@@ -17,7 +20,15 @@ import {
 import { useAppStore } from "@/contexts/AppStore";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import ApplicantsSheet from "@/components/b2b/ApplicantsSheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const fmtPrice = (n: number) =>
   new Intl.NumberFormat("fr-DZ").format(n) + " DA";
@@ -93,10 +104,15 @@ export default function OpportunityCard({
     getApplicantIds,
     pushNotification,
     hasApplicationAccepted,
+    deleteOpportunity,
+    editOpportunity,
   } = useAppStore();
   const { toast } = useToast();
   const [, navigate] = useLocation();
   const [applicantsOpen, setApplicantsOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(opp.title);
+  const [editDescription, setEditDescription] = useState(opp.description);
 
   const saved = isShortlisted(opp.id);
   const isOwn =
@@ -151,6 +167,48 @@ export default function OpportunityCard({
     );
   }
 
+  function handleDelete() {
+    const ok = deleteOpportunity(opp.id);
+    if (ok) toast({ title: "Annonce supprimée" });
+  }
+
+  function handleSaveEdit() {
+    if (!editTitle.trim() || !editDescription.trim()) return;
+    const ok = editOpportunity(opp.id, {
+      title: editTitle.trim(),
+      description: editDescription.trim(),
+    });
+    if (ok) {
+      setIsEditing(false);
+      toast({ title: "Annonce modifiée" });
+    }
+  }
+
+  // Inline edit form
+  if (isEditing) {
+    return (
+      <article className="bg-background border border-border p-5 space-y-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-sans">Modifier l'annonce</p>
+        <div className="space-y-2">
+          <label className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Titre</label>
+          <Input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Description</label>
+          <Textarea value={editDescription} onChange={(e) => setEditDescription(e.target.value)} rows={4} className="resize-none" />
+        </div>
+        <div className="flex gap-2 justify-end">
+          <Button variant="outline" size="sm" onClick={() => { setIsEditing(false); setEditTitle(opp.title); setEditDescription(opp.description); }}>
+            Annuler
+          </Button>
+          <Button size="sm" onClick={handleSaveEdit} disabled={!editTitle.trim() || !editDescription.trim()}>
+            Enregistrer
+          </Button>
+        </div>
+      </article>
+    );
+  }
+
   return (
     <article
       className="group bg-background border border-border hover:border-primary/40 transition-colors flex flex-col"
@@ -196,6 +254,7 @@ export default function OpportunityCard({
           <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
             {opportunityRoleLabels[opp.authorRole]} · {displayAuthor}
           </p>
+        <div className="flex items-center gap-1">
           <button
             onClick={() => toggleShortlist(opp.id)}
             data-testid={`button-shortlist-${opp.id}`}
@@ -212,6 +271,31 @@ export default function OpportunityCard({
               <Bookmark className="w-4 h-4" strokeWidth={1.5} />
             )}
           </button>
+
+          {isOwn && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  aria-label="Options"
+                  data-testid={`button-opp-options-${opp.id}`}
+                >
+                  <MoreHorizontal className="w-4 h-4" strokeWidth={1.5} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem onClick={() => setIsEditing(true)} data-testid={`button-edit-opp-${opp.id}`}>
+                  <Pencil className="w-3.5 h-3.5 mr-2" />
+                  Modifier
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleDelete} className="text-destructive focus:text-destructive" data-testid={`button-delete-opp-${opp.id}`}>
+                  <Trash2 className="w-3.5 h-3.5 mr-2" />
+                  Supprimer
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
         </div>
 
         <Link href={`/b2b/feed/${opp.id}`} className="block mb-3">

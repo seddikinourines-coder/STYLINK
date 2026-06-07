@@ -7,8 +7,11 @@ import {
   Heart,
   Image as ImageIcon,
   MessageSquare,
+  MoreHorizontal,
+  Pencil,
   Send,
   Sparkles,
+  Trash2,
   UserPlus,
   X,
 } from "lucide-react";
@@ -21,6 +24,12 @@ import {
   type FeedPost,
 } from "@/data/mockData";
 import { useB2BShell } from "@/components/b2b/B2BShellContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const roleLabels: Record<BusinessRole, string> = {
   boutique: "Boutique",
@@ -62,6 +71,8 @@ function PostCard({
   meName,
   meRole,
   meInitials,
+  onDelete,
+  onEdit,
 }: {
   post: FeedPost;
   liked: boolean;
@@ -79,6 +90,8 @@ function PostCard({
   meName: string;
   meRole: string;
   meInitials: string;
+  onDelete?: () => void;
+  onEdit?: () => void;
 }) {
   const [, navigate] = useLocation();
   const isMe = post.authorId === ME_AUTHOR_ID;
@@ -146,22 +159,59 @@ function PostCard({
             {post.timestamp}
           </p>
         </div>
-        <button
-          onClick={onToggleSave}
-          aria-pressed={saved}
-          aria-label={saved ? "Retirer des favoris" : "Sauvegarder"}
-          data-testid={`button-save-${post.id}`}
-          className={`p-2 rounded-full transition-colors ${
-            saved
-              ? "text-primary bg-primary/10"
-              : "text-muted-foreground hover:text-foreground hover:bg-muted"
-          }`}
-        >
-          <Bookmark
-            className={`w-4 h-4 ${saved ? "fill-current" : ""}`}
-            strokeWidth={1.75}
-          />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={onToggleSave}
+            aria-pressed={saved}
+            aria-label={saved ? "Retirer des favoris" : "Sauvegarder"}
+            data-testid={`button-save-${post.id}`}
+            className={`p-2 rounded-full transition-colors ${
+              saved
+                ? "text-primary bg-primary/10"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+          >
+            <Bookmark
+              className={`w-4 h-4 ${saved ? "fill-current" : ""}`}
+              strokeWidth={1.75}
+            />
+          </button>
+
+          {isMe && (onEdit || onDelete) && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  aria-label="Options"
+                  data-testid={`button-post-options-${post.id}`}
+                >
+                  <MoreHorizontal className="w-4 h-4" strokeWidth={1.75} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                {onEdit && (
+                  <DropdownMenuItem
+                    onClick={onEdit}
+                    data-testid={`button-edit-post-${post.id}`}
+                  >
+                    <Pencil className="w-3.5 h-3.5 mr-2" />
+                    Modifier
+                  </DropdownMenuItem>
+                )}
+                {onDelete && (
+                  <DropdownMenuItem
+                    onClick={onDelete}
+                    className="text-destructive focus:text-destructive"
+                    data-testid={`button-delete-post-${post.id}`}
+                  >
+                    <Trash2 className="w-3.5 h-3.5 mr-2" />
+                    Supprimer
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
       </div>
 
       {/* Body */}
@@ -332,6 +382,8 @@ export default function FeedTab() {
   const [draftImage, setDraftImage] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [composedPosts, setComposedPosts] = useState<FeedPost[]>([]);
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState("");
   const [liked, setLiked] = useState<Record<string, boolean>>({});
   const [saved, setSaved] = useState<Record<string, boolean>>({});
   const [commentOpen, setCommentOpen] = useState<Record<string, boolean>>({});
@@ -512,6 +564,25 @@ export default function FeedTab() {
     }
   }
 
+  function handleDeletePost(postId: string) {
+    setComposedPosts((prev) => prev.filter((p) => p.id !== postId));
+  }
+
+  function handleStartEdit(postId: string, currentBody: string) {
+    setEditingPostId(postId);
+    setEditDraft(currentBody);
+  }
+
+  function handleSaveEdit(postId: string) {
+    const body = editDraft.trim();
+    if (!body) return;
+    setComposedPosts((prev) =>
+      prev.map((p) => (p.id === postId ? { ...p, body } : p)),
+    );
+    setEditingPostId(null);
+    setEditDraft("");
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
       <div className="max-w-2xl mx-auto w-full space-y-5">
@@ -618,28 +689,53 @@ export default function FeedTab() {
             const isPostByMe = post.authorId === ME_AUTHOR_ID;
             const author = isPostByMe ? null : getDesignerById(post.authorId);
             const authorName = author?.name ?? "Membre Stylink";
+            const isEditing = editingPostId === post.id;
             return (
-              <PostCard
-                key={post.id}
-                post={post}
-                liked={!!liked[post.id]}
-                saved={!!saved[post.id]}
-                onToggleLike={() => handleToggleLike(post.id, isPostByMe)}
-                onToggleSave={() =>
-                  setSaved((prev) => ({ ...prev, [post.id]: !prev[post.id] }))
-                }
-                onConnect={() => handleConnect(post.id, post.authorId, authorName)}
-                onProposeCollab={() => handleProposeCollab(post.authorId)}
-                connectStatus={isConnected(post.authorId) ? "connected" : pendingConnections.includes(post.authorId) ? "pending" : undefined}
-                commentOpen={!!commentOpen[post.id]}
-                commentValue={commentValue[post.id] ?? ""}
-                onCommentChange={(v) => handleCommentChange(post.id, v)}
-                onCommentSubmit={() => handleCommentSubmit(post.id, isPostByMe)}
-                localComments={localComments[post.id] ?? []}
-                meName={myName}
-                meRole={myRole}
-                meInitials={initials}
-              />
+              <div key={post.id}>
+                {isEditing ? (
+                  <div className="bg-white rounded-2xl shadow-sm border border-black/5 p-4 space-y-3">
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-sans">Modifier la publication</p>
+                    <textarea
+                      value={editDraft}
+                      onChange={(e) => setEditDraft(e.target.value)}
+                      rows={4}
+                      className="w-full bg-[#F5F3EE] rounded-xl px-4 py-3 text-sm font-light focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                      autoFocus
+                    />
+                    <div className="flex gap-2 justify-end">
+                      <Button variant="outline" size="sm" onClick={() => { setEditingPostId(null); setEditDraft(""); }}>
+                        Annuler
+                      </Button>
+                      <Button size="sm" onClick={() => handleSaveEdit(post.id)} disabled={!editDraft.trim()}>
+                        Enregistrer
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <PostCard
+                    post={post}
+                    liked={!!liked[post.id]}
+                    saved={!!saved[post.id]}
+                    onToggleLike={() => handleToggleLike(post.id, isPostByMe)}
+                    onToggleSave={() =>
+                      setSaved((prev) => ({ ...prev, [post.id]: !prev[post.id] }))
+                    }
+                    onConnect={() => handleConnect(post.id, post.authorId, authorName)}
+                    onProposeCollab={() => handleProposeCollab(post.authorId)}
+                    connectStatus={isConnected(post.authorId) ? "connected" : pendingConnections.includes(post.authorId) ? "pending" : undefined}
+                    commentOpen={!!commentOpen[post.id]}
+                    commentValue={commentValue[post.id] ?? ""}
+                    onCommentChange={(v) => handleCommentChange(post.id, v)}
+                    onCommentSubmit={() => handleCommentSubmit(post.id, isPostByMe)}
+                    localComments={localComments[post.id] ?? []}
+                    meName={myName}
+                    meRole={myRole}
+                    meInitials={initials}
+                    onDelete={isPostByMe ? () => handleDeletePost(post.id) : undefined}
+                    onEdit={isPostByMe ? () => handleStartEdit(post.id, post.body) : undefined}
+                  />
+                )}
+              </div>
             );
           })
         )}
