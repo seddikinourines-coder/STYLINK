@@ -1,3 +1,19 @@
 [build]
   command = "pnpm --filter @workspace/stylink run build"
   publish = "artifacts/stylink/dist/public"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/auth/register"
+  to = "/.netlify/functions/auth-register"
+  status = 200
+
+[[redirects]]
+  from = "/api/auth/login"
+  to = "/.netlify/functions/auth-login"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
