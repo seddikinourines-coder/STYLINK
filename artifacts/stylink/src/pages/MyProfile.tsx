@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { Camera, Plus, Trash2, Save, ArrowLeft, Package, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAppStore } from "@/contexts/AppStore";
 import { useToast } from "@/hooks/use-toast";
-import { useUpload } from "@workspace/object-storage-web";
 import {
   Popover,
   PopoverContent,
@@ -25,7 +24,15 @@ import { ChevronsUpDown, Check } from "lucide-react";
 import { ALGERIA_WILAYAS } from "@/data/wilayas";
 import { cn } from "@/lib/utils";
 
-const API = "/api";
+/** Convert a File to a base64 data URL for local storage (no backend needed). */
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error("FileReader error"));
+    reader.readAsDataURL(file);
+  });
+}
 
 interface UserProduct {
   id: number;
@@ -97,38 +104,26 @@ export default function MyProfile() {
   const [city, setCity] = useState("");
   const [avatar, setAvatar] = useState("");
   const [saving, setSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const dbIdRef = useRef<number | undefined>(undefined);
-  const { uploadFile, isUploading, progress } = useUpload({
-    onSuccess: async (res) => {
-      const url = `/api/storage${res.objectPath}`;
-      setAvatar(url);
-      const id = dbIdRef.current;
-      if (id) {
-        try {
-          await fetch(`${API}/profile/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ avatar_url: url }),
-          });
-          updateUser({ avatar: url });
-          toast({ title: "Photo enregistrée", description: "Votre photo de profil a été sauvegardée." });
-        } catch {
-          toast({ title: "Photo téléchargée", description: "Photo mise à jour, mais la sauvegarde a échoué.", variant: "destructive" });
-        }
-      } else {
-        toast({ title: "Photo téléchargée", description: "Votre photo a été mise à jour." });
-      }
-    },
-    onError: () => {
-      toast({ title: "Erreur", description: "Impossible de télécharger la photo.", variant: "destructive" });
-    },
-  });
+
+  const handleAvatarFile = async (file: File) => {
+    setIsUploading(true);
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      setAvatar(dataUrl);
+      updateUser({ avatar: dataUrl });
+      toast({ title: "Photo enregistrée", description: "Votre photo de profil a été mise à jour." });
+    } catch {
+      toast({ title: "Erreur", description: "Impossible de lire la photo.", variant: "destructive" });
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   // Products
   const [products, setProducts] = useState<UserProduct[]>([]);
-  const [loadingProducts, setLoadingProducts] = useState(false);
 
   // New product form
   const [showAddProduct, setShowAddProduct] = useState(false);
@@ -143,16 +138,19 @@ export default function MyProfile() {
 
   const productFileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingProductImg, setUploadingProductImg] = useState(false);
-  const { uploadFile: uploadProductImage } = useUpload({
-    onSuccess: (res) => {
-      setPImages((prev) => [...prev, `/api/storage${res.objectPath}`]);
+
+  const handleProductImages = async (files: File[]) => {
+    if (!files.length) return;
+    setUploadingProductImg(true);
+    try {
+      const dataUrls = await Promise.all(files.map(fileToDataUrl));
+      setPImages((prev) => [...prev, ...dataUrls]);
+    } catch {
+      toast({ title: "Erreur", description: "Impossible de lire les images.", variant: "destructive" });
+    } finally {
       setUploadingProductImg(false);
-    },
-    onError: () => {
-      setUploadingProductImg(false);
-      toast({ title: "Erreur", description: "Impossible de télécharger l'image.", variant: "destructive" });
-    },
-  });
+    }
+  };
 
   const isBusiness = user?.type === "business";
 
@@ -165,128 +163,49 @@ export default function MyProfile() {
     setAvatar(user.avatar ?? "");
   }, [user]);
 
-  // Keep dbIdRef in sync so the upload onSuccess callback always has the latest value
-  useEffect(() => {
-    dbIdRef.current = user?.dbId;
-  }, [user?.dbId]);
+  // Keep dbIdRef in sync — not needed without backend
 
   // Auto-resolve dbId if the user is logged in but dbId wasn't captured (e.g. old session)
-  useEffect(() => {
-    if (!user || user.dbId || !user.email) return;
-    fetch(`${API}/auth/me?email=${encodeURIComponent(user.email)}`)
-      .then((r) => r.ok ? r.json() : null)
-      .then((data) => {
-        if (data?.id) {
-          updateUser({
-            dbId: data.id,
-            bio: data.bio ?? undefined,
-            avatar: data.avatar_url ?? undefined,
-          });
-        }
-      })
-      .catch(() => {});
-  }, [user?.email, user?.dbId]);
-
-  useEffect(() => {
-    if (!user?.dbId || !isBusiness) return;
-    setLoadingProducts(true);
-    fetch(`${API}/products/${user.dbId}`)
-      .then((r) => r.json())
-      .then(setProducts)
-      .catch(() => {})
-      .finally(() => setLoadingProducts(false));
-  }, [user?.dbId, isBusiness]);
+  // (removed — no longer needed without backend)
 
   if (!user) return null;
 
-  const handleSaveProfile = async () => {
-    if (!user.dbId) {
-      toast({ title: "Erreur", description: "ID utilisateur manquant.", variant: "destructive" });
-      return;
-    }
+  const handleSaveProfile = () => {
     setSaving(true);
-    try {
-      const body: Record<string, string> = {
-        name: displayName,
-        bio,
-        city,
-        avatar_url: avatar,
-      };
-      if (isBusiness) body.contact_name = contactName;
-
-      const res = await fetch(`${API}/profile/${user.dbId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      if (!res.ok) { toast({ title: "Erreur", description: data.error, variant: "destructive" }); return; }
-
-      const patch: Record<string, string> = {
-        bio: data.bio ?? "",
-        avatar: data.avatar_url ?? "",
-        city: data.city ?? "",
-      };
-      if (isBusiness) {
-        patch.brandName = data.name;
-        patch.contactName = data.contact_name ?? "";
-      } else {
-        patch.name = data.name;
-      }
-      updateUser(patch as Parameters<typeof updateUser>[0]);
-      setAvatar(data.avatar_url ?? "");
-      toast({ title: "Profil mis à jour", description: "Vos informations ont été sauvegardées." });
-    } catch {
-      toast({ title: "Erreur", description: "Impossible de joindre le serveur.", variant: "destructive" });
-    } finally {
-      setSaving(false);
+    const patch: Record<string, string> = { bio, city, avatar };
+    if (isBusiness) {
+      (patch as any).brandName = displayName;
+      (patch as any).contactName = contactName;
+    } else {
+      (patch as any).name = displayName;
     }
+    updateUser(patch as Parameters<typeof updateUser>[0]);
+    setSaving(false);
+    toast({ title: "Profil mis à jour", description: "Vos informations ont été sauvegardées." });
   };
 
-  const handleAddProduct = async (e: React.FormEvent) => {
+  const handleAddProduct = (e: React.FormEvent) => {
     e.preventDefault();
     if (!pName || !pPrice) return;
-    if (!user.dbId) {
-      toast({ title: "Session expirée", description: "Veuillez vous déconnecter puis vous reconnecter pour ajouter un article.", variant: "destructive" });
-      return;
-    }
     setAddingProduct(true);
-    try {
-      const res = await fetch(`${API}/products`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: user.dbId,
-          name: pName,
-          description: pDesc,
-          price: parseFloat(pPrice),
-          category: pCategory,
-          image_url: pImages.length > 0 ? JSON.stringify(pImages) : null,
-          sizes: pSizes.length > 0 ? JSON.stringify(pSizes) : null,
-          measurements: pMeasurements || null,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) { toast({ title: "Erreur", description: data.error, variant: "destructive" }); return; }
-      setProducts((prev) => [...prev, data]);
-      setPName(""); setPDesc(""); setPPrice(""); setPCategory(""); setPImages([]); setPSizes([]); setPMeasurements("");
-      setShowAddProduct(false);
-      toast({ title: "Article ajouté", description: `"${data.name}" est maintenant dans votre boutique.` });
-    } catch {
-      toast({ title: "Erreur", description: "Impossible d'ajouter l'article.", variant: "destructive" });
-    } finally {
-      setAddingProduct(false);
-    }
+    const newProduct: UserProduct = {
+      id: Date.now(),
+      name: pName,
+      description: pDesc || null,
+      price: pPrice,
+      category: pCategory || null,
+      image_url: pImages.length > 0 ? JSON.stringify(pImages) : null,
+    };
+    setProducts((prev) => [...prev, newProduct]);
+    setPName(""); setPDesc(""); setPPrice(""); setPCategory(""); setPImages([]); setPSizes([]); setPMeasurements("");
+    setShowAddProduct(false);
+    setAddingProduct(false);
+    toast({ title: "Article ajouté", description: `"${newProduct.name}" est maintenant dans votre boutique.` });
   };
 
-  const handleDeleteProduct = async (id: number) => {
-    try {
-      await fetch(`${API}/products/${id}`, { method: "DELETE" });
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-      toast({ title: "Article supprimé" });
-    } catch {
-      toast({ title: "Erreur", description: "Impossible de supprimer l'article.", variant: "destructive" });
-    }
+  const handleDeleteProduct = (id: number) => {
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+    toast({ title: "Article supprimé" });
   };
 
   return (
@@ -325,7 +244,7 @@ export default function MyProfile() {
                   className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white"
                 >
                   {isUploading ? (
-                    <span className="text-xs font-sans">{progress}%</span>
+                    <span className="text-xs font-sans">…</span>
                   ) : (
                     <Camera className="w-6 h-6" />
                   )}
@@ -340,7 +259,7 @@ export default function MyProfile() {
                 className="hidden"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
-                  if (file) uploadFile(file);
+                  if (file) handleAvatarFile(file);
                   e.target.value = "";
                 }}
               />
@@ -355,7 +274,7 @@ export default function MyProfile() {
                 className="w-full text-xs"
               >
                 <Upload className="w-3.5 h-3.5 mr-2" />
-                {isUploading ? `Téléchargement… ${progress}%` : "Choisir depuis le PC"}
+                {isUploading ? "Téléchargement…" : "Choisir depuis le PC"}
               </Button>
 
             </div>
@@ -505,12 +424,7 @@ export default function MyProfile() {
                           onChange={async (e) => {
                             const files = Array.from(e.target.files ?? []);
                             e.target.value = "";
-                            if (!files.length) return;
-                            setUploadingProductImg(true);
-                            for (const file of files) {
-                              await uploadProductImage(file);
-                            }
-                            setUploadingProductImg(false);
+                            await handleProductImages(files);
                           }}
                         />
 
@@ -543,9 +457,7 @@ export default function MyProfile() {
                 )}
 
                 {/* Product grid */}
-                {loadingProducts ? (
-                  <p className="text-muted-foreground text-sm">Chargement…</p>
-                ) : products.length === 0 ? (
+                {products.length === 0 ? (
                   <div className="text-center py-12 border border-dashed border-border">
                     <Package className="w-10 h-10 mx-auto mb-3 text-muted-foreground/40" strokeWidth={1} />
                     <p className="text-muted-foreground text-sm">Aucun article encore.</p>
