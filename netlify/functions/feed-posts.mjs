@@ -51,10 +51,13 @@ export const handler = async (event) => {
       }
 
       const { id, author_id, author_name, author_role, body: postBody, image } = body;
-      if (!id || !author_id || !author_name || !author_role || !postBody) {
+      const isBodyEmpty = typeof postBody !== "string" || postBody.trim() === "";
+      if (!id || !author_id || !author_name || !author_role || (isBodyEmpty && !image)) {
         return {
           statusCode: 400,
-          body: JSON.stringify({ error: "Missing required fields for feed post creation." }),
+          body: JSON.stringify({
+            error: "Missing required fields for feed post creation. A body or image is required.",
+          }),
         };
       }
 
@@ -63,7 +66,7 @@ export const handler = async (event) => {
         author_id,
         author_name,
         author_role,
-        body: postBody,
+        body: postBody ?? "",
         image: image ?? null,
       });
 
