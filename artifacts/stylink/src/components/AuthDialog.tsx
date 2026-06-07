@@ -56,7 +56,75 @@ const businessRoles: { value: BusinessRole; label: string }[] = [
   { value: "fabric-retailer", label: "Fabric Retailer" },
 ];
 
-const API_BASE = "/api";
+// ---------------------------------------------------------------------------
+// Local auth helpers — no backend required for this static deployment.
+// Credentials are stored in localStorage under "stylink_accounts".
+// ---------------------------------------------------------------------------
+const ACCOUNTS_KEY = "stylink_accounts";
+
+interface StoredAccount {
+  id: number;
+  type: string;
+  name: string;
+  contact_name?: string | null;
+  email: string;
+  password: string;
+  city?: string | null;
+  role?: string | null;
+}
+
+function loadAccounts(): StoredAccount[] {
+  try {
+    const raw = localStorage.getItem(ACCOUNTS_KEY);
+    return raw ? (JSON.parse(raw) as StoredAccount[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveAccounts(accounts: StoredAccount[]) {
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+}
+
+function localRegister(payload: {
+  type: string;
+  name: string;
+  contactName?: string;
+  email: string;
+  password: string;
+  city?: string;
+  role?: string;
+}): { ok: boolean; data?: StoredAccount; error?: string } {
+  const accounts = loadAccounts();
+  if (accounts.find((a) => a.email.toLowerCase() === payload.email.toLowerCase())) {
+    return { ok: false, error: "Un compte avec cet email existe déjà." };
+  }
+  const account: StoredAccount = {
+    id: Date.now(),
+    type: payload.type,
+    name: payload.name,
+    contact_name: payload.contactName ?? null,
+    email: payload.email,
+    password: payload.password,
+    city: payload.city ?? null,
+    role: payload.role ?? null,
+  };
+  saveAccounts([...accounts, account]);
+  return { ok: true, data: account };
+}
+
+function localLogin(
+  email: string,
+  password: string,
+): { ok: boolean; data?: StoredAccount; error?: string } {
+  const accounts = loadAccounts();
+  const account = accounts.find(
+    (a) => a.email.toLowerCase() === email.toLowerCase(),
+  );
+  if (!account) return { ok: false, error: "Aucun compte trouvé avec cet email." };
+  if (account.password !== password) return { ok: false, error: "Mot de passe incorrect." };
+  return { ok: true, data: account };
+}
 
 function WilayaCombobox({
   value,
@@ -192,99 +260,52 @@ export default function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
     signIn(user);
   };
 
-  const submitLogin = async (e: React.FormEvent) => {
+  const submitLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setApiError("");
     if (!email || !password) return;
     setLoading(true);
-    try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setApiError(data.error ?? "Erreur de connexion.");
-        return;
-      }
-      applyUser(data);
-      toast({
-        title: "Bienvenue",
-        description: "Connexion réussie.",
-      });
-      close();
-    } catch {
-      setApiError("Impossible de joindre le serveur.");
-    } finally {
-      setLoading(false);
+    const result = localLogin(email, password);
+    setLoading(false);
+    if (!result.ok || !result.data) {
+      setApiError(result.error ?? "Erreur de connexion.");
+      return;
     }
+    applyUser(result.data);
+    toast({ title: "Bienvenue", description: "Connexion réussie." });
+    close();
   };
 
-  const submitClient = async (e: React.FormEvent) => {
+  const submitClient = (e: React.FormEvent) => {
     e.preventDefault();
     setApiError("");
     if (!name || !email || !password) return;
     setLoading(true);
-    try {
-      const res = await fetch(`${API_BASE}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "client", name, email, password, city }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setApiError(data.error ?? "Erreur lors de l'inscription.");
-        return;
-      }
-      applyUser(data);
-      toast({
-        title: "Bienvenue " + name.split(" ")[0],
-        description: "Votre compte client a été créé.",
-      });
-      close();
-    } catch {
-      setApiError("Impossible de joindre le serveur.");
-    } finally {
-      setLoading(false);
+    const result = localRegister({ type: "client", name, email, password, city });
+    setLoading(false);
+    if (!result.ok || !result.data) {
+      setApiError(result.error ?? "Erreur lors de l'inscription.");
+      return;
     }
+    applyUser(result.data);
+    toast({ title: "Bienvenue " + name.split(" ")[0], description: "Votre compte client a été créé." });
+    close();
   };
 
-  const submitBusiness = async (e: React.FormEvent) => {
+  const submitBusiness = (e: React.FormEvent) => {
     e.preventDefault();
     setApiError("");
     if (!role || !name || !contactName || !email || !password) return;
     setLoading(true);
-    try {
-      const res = await fetch(`${API_BASE}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "business",
-          name,
-          contactName,
-          email,
-          password,
-          city,
-          role,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setApiError(data.error ?? "Erreur lors de l'inscription.");
-        return;
-      }
-      applyUser(data);
-      toast({
-        title: "Bienvenue " + name,
-        description: "Votre compte professionnel a été créé.",
-      });
-      close();
-    } catch {
-      setApiError("Impossible de joindre le serveur.");
-    } finally {
-      setLoading(false);
+    const result = localRegister({ type: "business", name, contactName, email, password, city, role });
+    setLoading(false);
+    if (!result.ok || !result.data) {
+      setApiError(result.error ?? "Erreur lors de l'inscription.");
+      return;
     }
+    applyUser(result.data);
+    toast({ title: "Bienvenue " + name, description: "Votre compte professionnel a été créé." });
+    close();
   };
 
   return (
