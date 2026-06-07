@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
 import { useLocation } from "wouter";
 import {
   Bookmark,
@@ -55,6 +55,7 @@ const designerTypeLabels: Record<string, string> = {
 const ME_AUTHOR_ID = "_me";
 const PAGE_SIZE = 4;
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+const MAX_COMPOSER_IMAGES = 5;
 
 interface LocalComment {
   text: string;
@@ -104,6 +105,38 @@ function PostCard({
 }) {
   const [, navigate] = useLocation();
   const author = isMe ? undefined : getDesignerById(post.authorId);
+  const images = post.images?.length ? post.images : post.image ? [post.image] : [];
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const swipeStartX = useRef<number | null>(null);
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [images.join("|")]);
+
+  const currentImage = images[activeImageIndex];
+  const hasPrevious = activeImageIndex > 0;
+  const hasNext = activeImageIndex < images.length - 1;
+
+  const prevImage = () => {
+    if (hasPrevious) setActiveImageIndex((idx) => idx - 1);
+  };
+
+  const nextImage = () => {
+    if (hasNext) setActiveImageIndex((idx) => idx + 1);
+  };
+
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    swipeStartX.current = event.clientX;
+  };
+
+  const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    if (swipeStartX.current === null) return;
+    const delta = event.clientX - swipeStartX.current;
+    swipeStartX.current = null;
+    if (delta > 40) prevImage();
+    if (delta < -40) nextImage();
+  };
 
   const name = isMe ? meName : (post.authorName ?? author?.name ?? "Membre Stylink");
   const role = isMe
@@ -231,14 +264,89 @@ function PostCard({
       </div>
 
       {/* Visual */}
-      {post.image && (
-        <div className="bg-muted">
-          <img
-            src={post.image}
-            alt=""
-            loading="lazy"
-            className="w-full max-h-[520px] object-cover"
-          />
+      {images.length > 0 && (
+        <div className="bg-muted relative">
+          <div
+            className="relative overflow-hidden"
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
+          >
+            <div
+              className="flex transition-transform duration-300 ease-out"
+              style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
+            >
+              {images.map((src, index) => (
+                <button
+                  type="button"
+                  key={`${src}-${index}`}
+                  onClick={() => setIsZoomOpen(true)}
+                  className="min-w-full shrink-0 p-0 border-0 bg-transparent"
+                  aria-label={`Afficher l'image ${index + 1} en plein écran`}
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    loading="lazy"
+                    className="w-full max-h-[520px] object-cover cursor-zoom-in"
+                  />
+                </button>
+              ))}
+            </div>
+
+            {hasPrevious && (
+              <button
+                type="button"
+                onClick={prevImage}
+                className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 text-white hover:bg-black/60"
+                aria-label="Image précédente"
+              >
+                ←
+              </button>
+            )}
+            {hasNext && (
+              <button
+                type="button"
+                onClick={nextImage}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 text-white hover:bg-black/60"
+                aria-label="Image suivante"
+              >
+                →
+              </button>
+            )}
+            {images.length > 1 && (
+              <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
+                {images.map((_, index) => (
+                  <span
+                    key={index}
+                    className={`h-2 w-2 rounded-full transition-all duration-200 ${
+                      index === activeImageIndex ? "bg-white w-3" : "bg-white/40"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {isZoomOpen && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+              onClick={() => setIsZoomOpen(false)}
+            >
+              <button
+                type="button"
+                className="absolute top-4 right-4 rounded-full bg-white/10 px-3 py-2 text-white hover:bg-white/20"
+                onClick={() => setIsZoomOpen(false)}
+              >
+                Fermer
+              </button>
+              <img
+                src={images[activeImageIndex]}
+                alt="Zoom"
+                className="max-h-[90vh] max-w-full object-contain"
+                onClick={(event) => event.stopPropagation()}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -388,7 +496,7 @@ export default function FeedTab() {
   const [, navigate] = useLocation();
 
   const [draft, setDraft] = useState("");
-  const [draftImage, setDraftImage] = useState<string | null>(null);
+  const [draftImages, setDraftImages] = useState<string[]>([]);
   const [imageError, setImageError] = useState<string | null>(null);
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
   const [isLoadingFeed, setIsLoadingFeed] = useState(false);
@@ -498,29 +606,54 @@ export default function FeedTab() {
     fileInputRef.current?.click();
   }
 
-  function onImageSelected(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  async function onImageSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
     e.target.value = "";
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      setImageError("Sélectionnez un fichier image.");
+    if (files.length === 0) return;
+
+    const validFiles = files.filter((file) => file.type.startsWith("image/"));
+    if (validFiles.length !== files.length) {
+      setImageError("Sélectionnez uniquement des images.");
       return;
     }
-    if (file.size > MAX_IMAGE_BYTES) {
+
+    const oversized = validFiles.find((file) => file.size > MAX_IMAGE_BYTES);
+    if (oversized) {
       setImageError("Image trop lourde (max 4 Mo).");
       return;
     }
-    setImageError(null);
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") setDraftImage(reader.result);
-    };
-    reader.readAsDataURL(file);
+
+    const remainingSlots = MAX_COMPOSER_IMAGES - draftImages.length;
+    if (remainingSlots <= 0) {
+      setImageError(`Vous pouvez ajouter au maximum ${MAX_COMPOSER_IMAGES} images.`);
+      return;
+    }
+
+    const toLoad = validFiles.slice(0, remainingSlots);
+    if (validFiles.length > remainingSlots) {
+      setImageError(`Limite atteinte : ${MAX_COMPOSER_IMAGES} images maximum.`);
+    } else {
+      setImageError(null);
+    }
+
+    const readFile = (file: File) =>
+      new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (typeof reader.result === "string") resolve(reader.result);
+          else reject(new Error("Impossible de lire l'image."));
+        };
+        reader.onerror = () => reject(new Error("Impossible de lire l'image."));
+        reader.readAsDataURL(file);
+      });
+
+    const loadedImages = await Promise.all(toLoad.map(readFile));
+    setDraftImages((prev) => [...prev, ...loadedImages]);
   }
 
   async function publish() {
     const body = draft.trim();
-    if (!body && !draftImage) return;
+    if (!body && draftImages.length === 0) return;
 
     setIsPublishing(true);
     const authorId = myAuthorId ?? ME_AUTHOR_ID;
@@ -530,7 +663,7 @@ export default function FeedTab() {
       authorName: myName,
       authorRole: myRole,
       body: body || "",
-      image: draftImage ?? undefined,
+      images: draftImages.length ? draftImages : undefined,
       timestamp: "à l'instant",
       likes: 0,
       comments: 0,
@@ -543,11 +676,11 @@ export default function FeedTab() {
         authorName: postPayload.authorName,
         authorRole: postPayload.authorRole,
         body: postPayload.body,
-        image: postPayload.image,
+        images: postPayload.images,
       });
       setFeedPosts((prev) => [created, ...prev]);
       setDraft("");
-      setDraftImage(null);
+      setDraftImages([]);
       setImageError(null);
       toast({ title: "Publication envoyée", description: "Votre post a bien été publié." });
     } catch (error) {
@@ -670,24 +803,38 @@ export default function FeedTab() {
                 data-testid="textarea-feed-composer"
               />
 
-              {draftImage && (
-                <div className="relative mt-3 rounded-xl overflow-hidden border border-black/5">
-                  <img
-                    src={draftImage}
-                    alt="Aperçu"
-                    className="w-full max-h-72 object-cover"
-                    data-testid="img-composer-preview"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setDraftImage(null)}
-                    aria-label="Retirer l'image"
-                    data-testid="button-remove-image"
-                    className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+              {draftImages.length > 0 && (
+                <>
+                  <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{draftImages.length} / {MAX_COMPOSER_IMAGES} images ajoutées</span>
+                    <span>{draftImages.length === MAX_COMPOSER_IMAGES ? "Limite atteinte" : "Glisser pour réorganiser plus tard"}</span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+                    {draftImages.map((src, index) => (
+                      <div
+                        key={`${src}-${index}`}
+                        className="relative rounded-xl overflow-hidden border border-black/5"
+                      >
+                        <img
+                          src={src}
+                          alt={`Aperçu ${index + 1}`}
+                          className="h-32 w-full object-cover"
+                          data-testid={`img-composer-preview-${index}`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setDraftImages((prev) => prev.filter((_, i) => i !== index))
+                          }
+                          aria-label="Retirer l'image"
+                          className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-black/80"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
 
               {imageError && (
@@ -703,6 +850,7 @@ export default function FeedTab() {
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={onImageSelected}
                 className="hidden"
                 data-testid="input-image-file"
@@ -712,17 +860,24 @@ export default function FeedTab() {
                 <button
                   type="button"
                   onClick={pickImage}
-                  className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  disabled={draftImages.length >= MAX_COMPOSER_IMAGES}
+                  className={`flex items-center gap-2 text-xs transition-colors ${
+                    draftImages.length >= MAX_COMPOSER_IMAGES
+                      ? "text-muted-foreground cursor-not-allowed"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                   data-testid="button-add-image"
                 >
                   <ImageIcon className="w-4 h-4" strokeWidth={1.5} />
-                  {draftImage ? "Changer l'image" : "Ajouter une image"}
+                  {draftImages.length > 0
+                    ? `Ajouter ${draftImages.length < MAX_COMPOSER_IMAGES ? "d'autres images" : "plus d'images"}`
+                    : "Ajouter une image"}
                 </button>
                 <Button
                   type="button"
                   size="sm"
                   onClick={publish}
-                  disabled={isPublishing || (!draft.trim() && !draftImage)}
+                  disabled={isPublishing || (!draft.trim() && draftImages.length === 0)}
                   className="rounded-full gap-1.5"
                   data-testid="button-publish-post"
                 >

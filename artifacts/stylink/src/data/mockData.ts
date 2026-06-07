@@ -1585,6 +1585,7 @@ export interface FeedPost {
   authorRole?: string;
   body: string;
   image?: string;
+  images?: string[];
   timestamp: string;
   likes: number;
   comments: number;

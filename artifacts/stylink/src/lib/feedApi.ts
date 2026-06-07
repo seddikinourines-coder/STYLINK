@@ -10,14 +10,35 @@ function formatTimestamp(createdAt: string): string {
   });
 }
 
+function parseImageValue(record: any): string[] | undefined {
+  const raw = record.images ?? record.image;
+  if (Array.isArray(raw)) {
+    return raw.filter((item) => typeof item === "string");
+  }
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((item) => typeof item === "string");
+      }
+    } catch {
+      // not JSON, continue
+    }
+    return raw ? [raw] : undefined;
+  }
+  return undefined;
+}
+
 function toFeedPost(record: any): FeedPost {
+  const images = parseImageValue(record);
   return {
     id: record.id,
     authorId: record.author_id,
     authorName: record.author_name,
     authorRole: record.author_role,
     body: record.body,
-    image: record.image ?? undefined,
+    image: images?.[0],
+    images,
     timestamp: record.created_at
       ? formatTimestamp(record.created_at)
       : "à l'instant",
@@ -68,15 +89,21 @@ export async function createFeedPost(payload: {
   authorName: string;
   authorRole: string;
   body: string;
-  image?: string | null;
+  images?: string[] | null;
 }): Promise<FeedPost> {
+  const images = payload.images?.filter(Boolean) ?? [];
   const body = {
     id: payload.id,
     author_id: payload.authorId,
     author_name: payload.authorName,
     author_role: payload.authorRole,
     body: payload.body,
-    image: payload.image ?? null,
+    image:
+      images.length > 1
+        ? JSON.stringify(images)
+        : images.length === 1
+          ? images[0]
+          : null,
   };
   const result = await request(API_BASE, {
     method: "POST",
@@ -88,11 +115,14 @@ export async function createFeedPost(payload: {
 
 export async function updateFeedPost(postId: string, patch: {
   body?: string;
-  image?: string | null;
+  images?: string[] | null;
 }): Promise<FeedPost> {
   const payload: Record<string, any> = {};
   if (patch.body !== undefined) payload.body = patch.body;
-  if (patch.image !== undefined) payload.image = patch.image;
+  if (patch.images !== undefined) {
+    const images = patch.images?.filter(Boolean) ?? [];
+    payload.image = images.length > 1 ? JSON.stringify(images) : images.length === 1 ? images[0] : null;
+  }
 
   const result = await request(`${API_BASE}?id=eq.${encodeURIComponent(postId)}`, {
     method: "PATCH",

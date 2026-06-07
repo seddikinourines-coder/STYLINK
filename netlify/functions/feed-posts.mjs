@@ -50,9 +50,10 @@ export const handler = async (event) => {
         return { statusCode: 400, body: JSON.stringify({ error: "Invalid JSON." }) };
       }
 
-      const { id, author_id, author_name, author_role, body: postBody, image } = body;
+      const { id, author_id, author_name, author_role, body: postBody, image, images } = body;
       const isBodyEmpty = typeof postBody !== "string" || postBody.trim() === "";
-      if (!id || !author_id || !author_name || !author_role || (isBodyEmpty && !image)) {
+      const rawImages = Array.isArray(images) ? images : image ? [image] : [];
+      if (!id || !author_id || !author_name || !author_role || (isBodyEmpty && rawImages.length === 0)) {
         return {
           statusCode: 400,
           body: JSON.stringify({
@@ -61,13 +62,17 @@ export const handler = async (event) => {
         };
       }
 
+      const imageValue = Array.isArray(images)
+        ? JSON.stringify(images.filter((item) => typeof item === "string"))
+        : image ?? null;
+
       const res = await fetchSupabase("feed_posts", "POST", {
         id,
         author_id,
         author_name,
         author_role,
         body: postBody ?? "",
-        image: image ?? null,
+        image: imageValue,
       });
 
       if (!res.ok) {
@@ -99,7 +104,16 @@ export const handler = async (event) => {
 
       const updates = {};
       if (body.body !== undefined) updates.body = body.body;
-      if (body.image !== undefined) updates.image = body.image;
+      if (body.images !== undefined) {
+        const images = Array.isArray(body.images)
+          ? body.images.filter((item) => typeof item === "string")
+          : typeof body.images === "string"
+            ? [body.images]
+            : [];
+        updates.image = images.length > 1 ? JSON.stringify(images) : images.length === 1 ? images[0] : null;
+      } else if (body.image !== undefined) {
+        updates.image = body.image;
+      }
 
       if (Object.keys(updates).length === 0) {
         return { statusCode: 400, body: JSON.stringify({ error: "Nothing to update." }) };
