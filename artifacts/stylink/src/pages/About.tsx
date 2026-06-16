@@ -1,40 +1,28 @@
+import { useTranslation } from "react-i18next";
+
 export default function About() {
+  const { t } = useTranslation();
+
   return (
     <section className="container mx-auto px-4 md:px-8 py-24 max-w-4xl">
       <header className="text-center mb-16">
         <p className="text-[11px] uppercase tracking-[0.3em] text-primary mb-3 font-sans">
-          About Us
+          {t('about.eyebrow')}
         </p>
         <h1 className="font-serif text-5xl md:text-6xl text-foreground mb-6">
-          Notre Manifeste
+          {t('about.title')}
         </h1>
         <p className="text-muted-foreground font-light max-w-2xl mx-auto leading-relaxed">
-          STYLINK est la première plateforme dédiée à la haute couture algérienne
-          indépendante — un trait d'union entre créateurs, ateliers, fournisseurs
-          de tissus et boutiques d'exception.
+          {t('about.p1')}
         </p>
       </header>
 
       <div className="prose prose-lg max-w-none font-sans text-foreground/90 leading-relaxed space-y-6">
         <p>
-          Née d'une obsession pour le savoir-faire et d'une conviction que
-          l'Algérie regorge de talents trop discrets, STYLINK rassemble en un
-          même lieu les acteurs essentiels de la mode locale : designers
-          visionnaires, ateliers gardiens de gestes ancestraux, fournisseurs de
-          matières précieuses et boutiques curatées.
+          {t('about.p2')}
         </p>
         <p>
-          Notre mission est simple — révéler. Donner à voir, donner à toucher,
-          donner à acheter. Permettre à une cliente de Constantine de découvrir
-          un caftan brodé à Tlemcen, à un styliste algérois de sourcer une soie
-          rare à Tizi Ouzou, à une mariée de rencontrer la maison qui réalisera
-          sa robe.
-        </p>
-        <p>
-          STYLINK est une maison digitale exigeante, sélective, fière de son
-          héritage et résolument tournée vers le futur. Chaque profil est
-          vérifié, chaque pièce est singulière, chaque rencontre est une
-          promesse.
+          {t('about.p3')}
         </p>
       </div>
 
@@ -42,19 +30,19 @@ export default function About() {
         <div className="text-center">
           <p className="font-serif text-4xl text-primary mb-2">2026</p>
           <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            Année de Fondation
+            {t('about.stat_year')}
           </p>
         </div>
         <div className="text-center">
-          <p className="font-serif text-4xl text-primary mb-2">48</p>
+          <p className="font-serif text-4xl text-primary mb-2">58</p>
           <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            Wilayas Représentées
+            {t('about.stat_wilayas')}
           </p>
         </div>
         <div className="text-center">
           <p className="font-serif text-4xl text-primary mb-2">+200</p>
           <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            Maisons Partenaires
+            {t('about.stat_partners')}
           </p>
         </div>
       </div>

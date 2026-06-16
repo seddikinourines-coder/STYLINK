@@ -92,6 +92,16 @@
     "days_3_5": "3 à 5 jours ouvrables",
     "days_5_7": "5 à 7 jours ouvrables"
   },
+  "about": {
+    "eyebrow": "À Propos",
+    "title": "Notre Manifeste",
+    "p1": "STYLINK est l'endroit où la mode algérienne se connecte, se développe et prospère. Dans un pays porté par une génération jeune et numérique, la demande de style, d'identité et d'innovation n'a jamais été aussi forte — mais l'industrie reste fragmentée. STYLINK change cela.",
+    "p2": "Nous réunissons designers, ateliers, boutiques, fournisseurs de tissus et passionnés de mode au sein d'un écosystème numérique fluide, facilitant plus que jamais la découverte de talents, la collaboration et les affaires à travers les 58 wilayas.",
+    "p3": "Avec des outils intelligents comme la découverte géolocalisée, la communication en temps réel et une place de marché intégrée, STYLINK transforme un potentiel dispersé en opportunités réelles. Conçu pour l'Algérie, par des personnes qui comprennent sa culture et ses ambitions, STYLINK est plus qu'une plateforme — c'est le moteur du futur de la mode algérienne.",
+    "stat_year": "Année de Fondation",
+    "stat_wilayas": "Wilayas Représentées",
+    "stat_partners": "Maisons Partenaires"
+  },
   "b2b": {
     "search_placeholder": "Rechercher dans le réseau, opportunités, messages...",
     "tabs": {

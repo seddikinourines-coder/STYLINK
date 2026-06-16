@@ -92,6 +92,16 @@
     "days_3_5": "3 to 5 business days",
     "days_5_7": "5 to 7 business days"
   },
+  "about": {
+    "eyebrow": "About Us",
+    "title": "Our Manifesto",
+    "p1": "STYLINK is where Algerian fashion connects, grows, and thrives. In a country powered by a young, digital-first generation, the demand for style, identity, and innovation has never been higher—but the industry remains fragmented. STYLINK changes that.",
+    "p2": "We bring designers, ateliers, boutiques, fabric suppliers, and fashion lovers together into one seamless digital ecosystem, making it easier than ever to discover talent, collaborate, and do business across all 58 wilayas.",
+    "p3": "With smart tools like geolocated discovery, real-time communication, and an integrated marketplace, STYLINK transforms scattered potential into real opportunity. Built for Algeria, by people who understand its culture and ambition, STYLINK is more than a platform—it’s the engine driving the future of Algerian fashion.",
+    "stat_year": "Founding Year",
+    "stat_wilayas": "Wilayas Represented",
+    "stat_partners": "Partner Houses"
+  },
   "b2b": {
     "search_placeholder": "Search in network, opportunities, messages...",
     "tabs": {
