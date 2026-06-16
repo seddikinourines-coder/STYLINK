@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Mail, Phone } from "lucide-react";
 
 export default function About() {
   const { t } = useTranslation();
@@ -44,6 +45,43 @@ export default function About() {
           <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
             {t('about.stat_partners')}
           </p>
+        </div>
+      </div>
+
+      <div className="mt-32 pt-16 border-t border-border">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
+            {t('about.contact_title')}
+          </h2>
+          <p className="text-muted-foreground font-light mb-12">
+            {t('about.contact_subtitle')}
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="p-8 border border-border bg-card/30 rounded-sm flex flex-col items-center">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary">
+                <Mail size={20} />
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2 font-sans">
+                {t('about.email_label')}
+              </p>
+              <a href="mailto:support@stylink.com" className="text-lg font-serif hover:text-primary transition-colors">
+                support@stylink.com
+              </a>
+            </div>
+            
+            <div className="p-8 border border-border bg-card/30 rounded-sm flex flex-col items-center">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary">
+                <Phone size={20} />
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2 font-sans">
+                {t('about.phone_label')}
+              </p>
+              <a href="tel:+213555123456" className="text-lg font-serif hover:text-primary transition-colors">
+                +213 (0) 555 12 34 56
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

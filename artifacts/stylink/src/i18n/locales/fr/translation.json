@@ -100,7 +100,11 @@
     "p3": "Avec des outils intelligents comme la découverte géolocalisée, la communication en temps réel et une place de marché intégrée, STYLINK transforme un potentiel dispersé en opportunités réelles. Conçu pour l'Algérie, par des personnes qui comprennent sa culture et ses ambitions, STYLINK est plus qu'une plateforme — c'est le moteur du futur de la mode algérienne.",
     "stat_year": "Année de Fondation",
     "stat_wilayas": "Wilayas Représentées",
-    "stat_partners": "Maisons Partenaires"
+"stat_partners": "Maisons Partenaires",
+    "contact_title": "Support Client",
+    "contact_subtitle": "Notre équipe est là pour vous aider avec toutes vos demandes.",
+    "email_label": "Email",
+    "phone_label": "Téléphone"
   },
   "b2b": {
     "search_placeholder": "Rechercher dans le réseau, opportunités, messages...",

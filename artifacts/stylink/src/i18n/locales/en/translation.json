@@ -100,7 +100,11 @@
     "p3": "With smart tools like geolocated discovery, real-time communication, and an integrated marketplace, STYLINK transforms scattered potential into real opportunity. Built for Algeria, by people who understand its culture and ambition, STYLINK is more than a platform—it’s the engine driving the future of Algerian fashion.",
     "stat_year": "Founding Year",
     "stat_wilayas": "Wilayas Represented",
-    "stat_partners": "Partner Houses"
+"stat_partners": "Partner Houses",
+    "contact_title": "Contact Support",
+    "contact_subtitle": "Our team is here to assist you with any inquiries.",
+    "email_label": "Email",
+    "phone_label": "Phone"
   },
   "b2b": {
     "search_placeholder": "Search in network, opportunities, messages...",
