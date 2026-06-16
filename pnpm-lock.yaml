@@ -70,10 +70,6 @@ catalogs:
       specifier: ^3.25.76
       version: 3.25.76
 
-overrides:
-  react: 19.1.0
-  react-dom: 19.1.0
-
 importers:
 
   .:
