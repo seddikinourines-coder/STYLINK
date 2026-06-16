@@ -1,23 +1,50 @@
-import { useState } from "react";
-import { Send } from "lucide-react";
+import { useRef, useState } from "react";
+import { Send, Paperclip, X } from "lucide-react";
 import {
   mockConversations,
   getDesignerById,
   Conversation,
   Message,
+  MessageAttachment,
 } from "@/data/mockData";
 
 export default function Messages() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [conversations, setConversations] = useState<Conversation[]>(mockConversations);
   const [activeId, setActiveId] = useState<string>(mockConversations[0]?.id ?? "");
   const [draft, setDraft] = useState("");
+  const [attachment, setAttachment] = useState<MessageAttachment | null>(null);
 
   const active = conversations.find((c) => c.id === activeId);
   const activeDesigner = active ? getDesignerById(active.designerId) : undefined;
 
+  function handleFilePick(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    const kind = file.type.startsWith("image/") ? "image" : "file";
+
+    setAttachment({
+      kind,
+      url,
+      name: file.name,
+      size: file.size,
+      mime: file.type,
+    });
+  }
+
+  function handleRemoveAttachment() {
+    if (attachment?.url) {
+      URL.revokeObjectURL(attachment.url);
+    }
+    setAttachment(null);
+  }
+
   function handleSend(e: React.FormEvent) {
     e.preventDefault();
-    if (!draft.trim() || !active) return;
+    if ((!draft.trim() && !attachment) || !active) return;
+
     const newMsg: Message = {
       id: `m${Date.now()}`,
       sender: "me",
@@ -26,20 +53,24 @@ export default function Messages() {
         hour: "2-digit",
         minute: "2-digit",
       }),
+      attachment: attachment ?? undefined,
     };
+
     setConversations((prev) =>
       prev.map((c) =>
         c.id === active.id
           ? {
               ...c,
               messages: [...c.messages, newMsg],
-              lastMessage: newMsg.text,
+              lastMessage: newMsg.text || "Pièce jointe",
               lastTimestamp: newMsg.timestamp,
             }
           : c,
       ),
     );
     setDraft("");
+    handleRemoveAttachment();
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   return (
@@ -131,7 +162,27 @@ export default function Messages() {
                           : "bg-muted text-foreground"
                       }`}
                     >
-                      <p className="text-sm font-light leading-relaxed">{m.text}</p>
+                      {m.text && (
+                        <p className="text-sm font-light leading-relaxed">{m.text}</p>
+                      )}
+
+                      {m.attachment && (
+                        <div className="mt-3">
+                          {m.attachment.kind === "image" ? (
+                            <img
+                              src={m.attachment.url}
+                              alt={m.attachment.name}
+                              className="max-w-full rounded-md border border-border"
+                            />
+                          ) : (
+                            <div className="inline-flex items-center gap-2 rounded-md border border-border bg-background/80 px-3 py-2 text-sm">
+                              <Paperclip className="w-4 h-4" />
+                              <span>{m.attachment.name}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       <p
                         className={`text-[10px] uppercase tracking-[0.15em] mt-2 ${
                           m.sender === "me" ? "text-background/60" : "text-muted-foreground"
@@ -146,22 +197,64 @@ export default function Messages() {
 
               <form
                 onSubmit={handleSend}
-                className="border-t border-border p-4 flex items-center gap-3"
+                className="border-t border-border p-4 flex flex-col gap-3"
               >
-                <input
-                  value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
-                  placeholder="Écrire un message..."
-                  className="flex-1 bg-transparent border-b border-border py-2 text-sm font-light focus:outline-none focus:border-primary placeholder:text-muted-foreground"
-                  data-testid="input-message-draft"
-                />
-                <button
-                  type="submit"
-                  className="p-3 bg-foreground text-background hover:bg-primary transition-colors"
-                  data-testid="button-send-message"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground hover:border-primary hover:text-primary transition-colors"
+                    onClick={() => fileInputRef.current?.click()}
+                    aria-label="Ajouter une pièce jointe"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                  </button>
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFilePick}
+                    data-testid="input-attachment"
+                  />
+
+                  <input
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    placeholder="Écrire un message..."
+                    className="flex-1 bg-transparent border-b border-border py-2 text-sm font-light focus:outline-none focus:border-primary placeholder:text-muted-foreground"
+                    data-testid="input-message-draft"
+                  />
+                  <button
+                    type="submit"
+                    className="p-3 bg-foreground text-background hover:bg-primary transition-colors"
+                    data-testid="button-send-message"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {attachment && (
+                  <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-muted/80 p-3">
+                    <div className="flex items-center gap-3 truncate">
+                      <Paperclip className="w-4 h-4" />
+                      <div className="min-w-0 truncate">
+                        <p className="text-sm font-medium truncate">{attachment.name}</p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {(attachment.size ?? 0 / 1024).toFixed(1)} KB
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveAttachment}
+                      className="rounded-full border border-border bg-background p-2 text-muted-foreground hover:text-foreground"
+                      aria-label="Supprimer la pièce jointe"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </form>
             </>
           ) : (
