@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import { ShoppingBag, Minus, Plus, X, Package } from "lucide-react";
 import { useAppStore } from "@/contexts/AppStore";
 import { mockProducts, getDesignerById } from "@/data/mockData";
@@ -23,6 +24,7 @@ function parseImages(raw: string | null): string[] {
 }
 
 export default function Cart() {
+  const { t } = useTranslation();
   const { cart, updateQty, removeFromCart, clearCart } = useAppStore();
   const [, navigate] = useLocation();
   const [userProducts, setUserProducts] = useState<Record<string, UserProduct>>({});
@@ -96,14 +98,14 @@ export default function Cart() {
           strokeWidth={1}
         />
         <h1 className="font-serif text-4xl text-foreground mb-4">
-          Votre panier est vide
+          {t('cart.empty_title')}
         </h1>
         <p className="text-muted-foreground font-light mb-10">
-          Découvrez nos pièces d'exception et ajoutez vos coups de cœur.
+          {t('cart.empty_subtitle')}
         </p>
         <Button asChild>
           <Link href="/shop" data-testid="link-cart-shop">
-            Explorer la Boutique
+            {t('cart.explore_shop')}
           </Link>
         </Button>
       </section>
@@ -113,7 +115,7 @@ export default function Cart() {
   if (pendingCount > 0 && lines.length === 0) {
     return (
       <section className="container mx-auto px-4 md:px-8 py-32 text-center max-w-xl">
-        <p className="text-muted-foreground font-light">Chargement du panier…</p>
+        <p className="text-muted-foreground font-light">{t('cart.loading')}</p>
       </section>
     );
   }
@@ -122,10 +124,10 @@ export default function Cart() {
     <section className="container mx-auto px-4 md:px-8 py-20 max-w-5xl">
       <header className="text-center mb-12">
         <p className="text-[11px] uppercase tracking-[0.3em] text-primary mb-3 font-sans">
-          Mon Panier
+          {t('cart.eyebrow')}
         </p>
         <h1 className="font-serif text-5xl md:text-6xl text-foreground mb-4">
-          Shopping Bag
+          {t('cart.title')}
         </h1>
       </header>
 
@@ -184,7 +186,7 @@ export default function Cart() {
                   className="text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground flex items-center gap-1"
                   data-testid={`button-remove-${line.productId}`}
                 >
-                  <X className="w-3 h-3" /> Retirer
+                  <X className="w-3 h-3" /> {t('cart.remove')}
                 </button>
               </div>
             </div>
@@ -200,7 +202,7 @@ export default function Cart() {
       <div className="flex flex-col items-end mt-10 gap-4">
         <div className="flex items-baseline gap-6">
           <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            Total
+            {t('cart.total')}
           </span>
           <span className="font-serif text-3xl text-foreground">
             {total.toLocaleString("fr-DZ")} DA
@@ -212,13 +214,13 @@ export default function Cart() {
             onClick={clearCart}
             data-testid="button-clear-cart"
           >
-            Vider le panier
+            {t('cart.clear_cart')}
           </Button>
           <Button
             onClick={() => navigate("/checkout")}
             data-testid="button-checkout"
           >
-            Passer Commande
+            {t('cart.checkout')}
           </Button>
         </div>
       </div>

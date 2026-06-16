@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 import { MapPin, Home, User as UserIcon } from "lucide-react";
 import { mockDesigners, Designer } from "@/data/mockData";
 import { useAppStore } from "@/contexts/AppStore";
@@ -47,6 +48,7 @@ const ALGERIA_PATH =
   "Z";
 
 export default function FashionMap() {
+  const { t } = useTranslation();
   const { user } = useAppStore();
 
   const clusters: CityCluster[] = useMemo(() => {
@@ -72,7 +74,7 @@ export default function FashionMap() {
 
   const userRole = useMemo(() => {
     if (!user) return "";
-    if (user.type === "client") return "Client";
+    if (user.type === "client") return t("account.client");
     const labels: Record<string, string> = {
       boutique: "Boutique",
       designer: "Designer",
@@ -80,7 +82,7 @@ export default function FashionMap() {
       "fabric-retailer": "Fournisseur de tissus",
     };
     return labels[user.role] ?? user.role;
-  }, [user]);
+  }, [user, t]);
 
   const allClusters = useMemo((): CityCluster[] => {
     if (!userWilaya) return clusters;
@@ -104,13 +106,13 @@ export default function FashionMap() {
       <div className="container mx-auto px-4 md:px-8">
         <div className="text-center mb-12">
           <p className="text-[11px] uppercase tracking-[0.3em] text-primary mb-3 font-sans">
-            La Carte
+            {t('map.eyebrow')}
           </p>
           <h2 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
-            Une mode ancrée dans le territoire
+            {t('map.title')}
           </h2>
           <p className="text-muted-foreground font-light max-w-xl mx-auto">
-            Découvrez nos créateurs à travers les grandes villes algériennes.
+            {t('map.subtitle')}
           </p>
         </div>
 
@@ -206,7 +208,7 @@ export default function FashionMap() {
             {selected ? (
               <div>
                 <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground mb-2">
-                  {totalCount(selected)} profil{totalCount(selected) > 1 ? "s" : ""}
+                  {totalCount(selected)} {t('map.profiles')}
                 </p>
                 <h3
                   className="font-serif text-3xl text-foreground mb-6"
@@ -231,7 +233,7 @@ export default function FashionMap() {
                               {userDisplayName}
                             </p>
                             <span className="text-[9px] uppercase tracking-[0.15em] bg-primary/10 text-primary px-1.5 py-0.5 font-sans">
-                              Vous
+                              {t('map.you')}
                             </span>
                           </div>
                           <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
@@ -270,7 +272,7 @@ export default function FashionMap() {
               </div>
             ) : (
               <p className="text-muted-foreground font-light">
-                Sélectionnez une ville pour découvrir ses créateurs.
+                {t('map.select_city')}
               </p>
             )}
           </div>

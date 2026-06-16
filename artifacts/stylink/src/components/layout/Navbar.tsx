@@ -166,13 +166,13 @@ export default function Navbar() {
                     <DropdownMenuLabel className="font-serif">
                       <span>{user.type === "client" ? user.name : user.brandName}</span>
                       <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-sans mt-1">
-                        {user.type === "client" ? "Client" : "Business"}
+                        {user.type === "client" ? t("account.client") : t("account.business")}
                       </p>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                       <Link href="/profile" data-testid="menu-profile">
-                        <User className="w-4 h-4 mr-2" /> Mon profil
+                        <User className="w-4 h-4 mr-2" /> {t("account.my_profile")}
                       </Link>
                     </DropdownMenuItem>
                     {isBusiness && (
@@ -186,12 +186,12 @@ export default function Navbar() {
                       <>
                         <DropdownMenuItem asChild>
                           <Link href="/favorites" data-testid="menu-favorites">
-                            <Heart className="w-4 h-4 mr-2" /> Mes favoris
+                            <Heart className="w-4 h-4 mr-2" /> {t("account.my_favorites")}
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <Link href="/cart" data-testid="menu-cart">
-                            <ShoppingBag className="w-4 h-4 mr-2" /> Mon panier
+                            <ShoppingBag className="w-4 h-4 mr-2" /> {t("account.my_cart")}
                           </Link>
                         </DropdownMenuItem>
                       </>
@@ -201,7 +201,7 @@ export default function Navbar() {
                       onSelect={() => signOut()}
                       data-testid="menu-signout"
                     >
-                      <LogOut className="w-4 h-4 mr-2" /> Déconnexion
+                      <LogOut className="w-4 h-4 mr-2" /> {t("account.logout")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
