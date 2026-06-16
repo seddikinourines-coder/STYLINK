@@ -538,7 +538,7 @@ export default function FeedTab() {
     if (!body && !draftImage) return;
     const post: FeedPost = {
       id: `local-${Date.now()}`,
-      authorId: ME_AUTHOR_ID,
+      authorId: myAuthorId,
       body: body || "",
       image: draftImage ?? undefined,
       timestamp: "à l'instant",
@@ -552,7 +552,7 @@ export default function FeedTab() {
   }
 
   function handleConnect(postId: string, authorId: string, authorName: string) {
-    if (authorId === ME_AUTHOR_ID) return;
+    if (authorId === myAuthorId) return;
     if (pendingConnections.includes(authorId) || isConnected(authorId)) return;
     addPendingConnection(authorId);
     pushNotification({
@@ -565,7 +565,7 @@ export default function FeedTab() {
   }
 
   function handleProposeCollab(authorId: string) {
-    if (authorId === ME_AUTHOR_ID) return;
+    if (authorId === myAuthorId) return;
     const params = new URLSearchParams({ with: authorId, context: "collaborate" });
     navigate(`/b2b/messages?${params.toString()}`);
   }
@@ -732,7 +732,7 @@ export default function FeedTab() {
           </div>
         ) : (
           visiblePosts.map((post) => {
-            const isPostByMe = post.authorId === ME_AUTHOR_ID;
+            const isPostByMe = post.authorId === myAuthorId;
             const author = isPostByMe ? null : getDesignerById(post.authorId);
             const authorName = author?.name ?? "Membre Stylink";
             const isEditing = editingPostId === post.id;
