@@ -507,18 +507,7 @@ export default function FeedTab() {
     return () => obs.disconnect();
   }, [hasMore, filtered.length, visiblePosts.length]);
 
-  const isBusiness = !!user && user.type === "business";
-  const myName = !user
-    ? "Vous"
-    : user.type === "business"
-      ? user.brandName
-      : user.name;
-  const myRole = isBusiness && user ? roleLabels[user.role] : "Membre";
-  const initials = myName
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? "")
-    .join("");
+
 
   function pickImage() {
     fileInputRef.current?.click();
