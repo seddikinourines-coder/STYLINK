@@ -49,7 +49,7 @@ export default function Hero() {
       data-testid="section-hero"
     >
       <motion.div
-        className="sticky top-0 h-[100dvh] min-h-[700px] overflow-hidden bg-secondary will-change-transform"
+        className="sticky top-0 h-[100dvh] min-h-[700px] overflow-hidden bg-secondary will-change-transform flex flex-col items-center justify-center w-full"
         style={{ ...motionStyles, transformOrigin: "center top" }}
       >
         {/* Full-bleed parallax background */}
@@ -70,14 +70,14 @@ export default function Hero() {
 
         {/* Editorial Content */}
         <motion.div
-          className="relative z-10 h-full container px-4 flex flex-col items-center justify-center text-center"
+          className="relative z-10 h-full w-full container mx-auto px-4 flex flex-col items-center justify-center text-center overflow-hidden"
           style={reduced ? {} : { y: contentY, opacity: contentOpacity }}
         >
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 max-w-5xl leading-[1.05] drop-shadow-lg"
+            className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 max-w-5xl leading-[1.05] drop-shadow-lg mx-auto"
           >
             Because Every Part of <br />
             <span className="italic font-light text-primary/90">Fashion Deserves Its Place</span>
@@ -87,7 +87,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
-            className="text-white/85 text-lg md:text-xl max-w-2xl mb-12 font-sans font-light leading-relaxed"
+            className="text-white/85 text-lg md:text-xl max-w-2xl mb-12 font-sans font-light leading-relaxed mx-auto"
           >
             Une curation exclusive des meilleurs designers, ateliers cachés, et
             fournisseurs de tissus d'exception en Algérie.
@@ -97,7 +97,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
+            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto max-w-full mx-auto justify-center"
           >
             <Button
               asChild
