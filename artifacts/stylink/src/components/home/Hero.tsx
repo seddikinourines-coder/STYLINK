@@ -89,8 +89,8 @@ export default function Hero() {
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
             className="text-white/85 text-lg md:text-xl max-w-2xl mb-12 font-sans font-light leading-relaxed mx-auto"
           >
-            Une curation exclusive des meilleurs designers, ateliers cachés, et
-            fournisseurs de tissus d'exception en Algérie.
+            A handpicked collection of premier designers, hidden ateliers,
+            and exceptional fabric curators across Algeria.
           </motion.p>
 
           <motion.div
