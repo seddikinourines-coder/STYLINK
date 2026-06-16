@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Send, Paperclip, X, Ruler2 } from "lucide-react";
+import { Send, Paperclip, X, Ruler } from "lucide-react";
 import {
   mockConversations,
   getDesignerById,
