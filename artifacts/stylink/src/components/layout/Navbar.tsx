@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Heart, User, ShoppingBag, Briefcase, LogOut } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Heart, User, ShoppingBag, Briefcase, LogOut, Globe } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,22 +13,23 @@ import {
 import AuthDialog from "@/components/AuthDialog";
 import { useAppStore } from "@/contexts/AppStore";
 
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Boutiques", href: "/boutiques" },
-  { label: "Meet the Designers", href: "/designers" },
-  { label: "Discover Ateliers", href: "/ateliers" },
-  { label: "Fabric Retailers", href: "/fabric-retailers" },
-  { label: "About Us", href: "/about" },
-];
-
 export default function Navbar() {
+  const { t, i18n } = useTranslation();
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const { user, signOut, cartCount } = useAppStore();
   const overHero = location === "/";
   const isBusiness = user?.type === "business";
+
+  const navItems = [
+    { label: t("nav.home"), href: "/" },
+    { label: t("nav.boutiques"), href: "/boutiques" },
+    { label: t("nav.designers"), href: "/designers" },
+    { label: t("nav.ateliers"), href: "/ateliers" },
+    { label: t("nav.fabric_retailers"), href: "/fabric-retailers" },
+    { label: t("nav.about"), href: "/about" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -41,6 +43,10 @@ export default function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? location === "/" : location.startsWith(href);
 
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
+
   return (
     <>
       <nav
@@ -53,7 +59,34 @@ export default function Navbar() {
         <div className="px-4 md:px-8 pt-5 pb-3 max-w-[1400px] mx-auto">
           {/* Top row: logo centered, icons right */}
           <div className="grid grid-cols-[1fr_auto_1fr] items-center mb-3">
-            <div />
+            <div className="flex items-center gap-1 md:gap-2 justify-self-start">
+               {/* Language Switcher on the left */}
+               <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="p-2 text-current hover:text-primary transition-colors flex items-center gap-1.5"
+                    aria-label="Change language"
+                  >
+                    <Globe className="w-4 h-4 md:w-5 md:h-5" strokeWidth={1.5} />
+                    <span className="text-[10px] uppercase tracking-widest font-sans hidden sm:inline">
+                      {i18n.language.toUpperCase()}
+                    </span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-40">
+                  <DropdownMenuItem onSelect={() => changeLanguage("en")}>
+                    {t("languages.en")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => changeLanguage("fr")}>
+                    {t("languages.fr")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => changeLanguage("ar")}>
+                    {t("languages.ar")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            
             <Link
               href="/"
               className="justify-self-center"

@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 import {
   motion,
   useScroll,
@@ -10,6 +11,7 @@ import heroImg from "@/assets/images/hero.png";
 import { Button } from "@/components/ui/button";
 
 export default function Hero() {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
 
@@ -79,7 +81,7 @@ export default function Hero() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="text-white/90 font-sans font-medium tracking-[0.3em] uppercase mb-6 text-xs md:text-sm"
           >
-            Mode Algérienne Indépendante
+            {t('hero.eyebrow')}
           </motion.span>
 
           <motion.h1
@@ -88,8 +90,8 @@ export default function Hero() {
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
             className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 max-w-5xl leading-[1.05] drop-shadow-lg"
           >
-            Où la Mode Rencontre <br />
-            <span className="italic font-light text-primary/90">le Savoir-Faire</span>
+            {t('hero.title')} <br />
+            <span className="italic font-light text-primary/90">{t('hero.title_italic')}</span>
           </motion.h1>
 
           <motion.p
@@ -98,8 +100,7 @@ export default function Hero() {
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
             className="text-white/85 text-lg md:text-xl max-w-2xl mb-12 font-sans font-light leading-relaxed"
           >
-            Une curation exclusive des meilleurs designers, ateliers cachés, et
-            fournisseurs de tissus d'exception en Algérie.
+            {t('hero.description')}
           </motion.p>
 
           <motion.div
@@ -114,7 +115,7 @@ export default function Hero() {
               className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 font-sans tracking-[0.2em] uppercase px-12 h-14 text-sm w-full sm:w-auto"
             >
               <Link href="/shop" data-testid="button-hero-shop">
-                Explorer
+                {t('hero.explore')}
               </Link>
             </Button>
             <Button
@@ -124,7 +125,7 @@ export default function Hero() {
               className="rounded-none border-white/40 text-white hover:bg-white hover:text-black font-sans tracking-[0.2em] uppercase px-12 h-14 text-sm bg-transparent backdrop-blur-sm w-full sm:w-auto"
             >
               <Link href="/designers" data-testid="button-hero-designers">
-                Nos Designers
+                {t('hero.our_designers')}
               </Link>
             </Button>
           </motion.div>
@@ -136,7 +137,7 @@ export default function Hero() {
           style={reduced ? {} : { opacity: contentOpacity }}
         >
           <span className="text-[10px] uppercase tracking-[0.4em] text-white/70 font-sans">
-            Défiler
+            {t('hero.scroll')}
           </span>
           <div className="w-[1px] h-10 bg-white/40 overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1/2 bg-white animate-[slideDown_2s_ease-in-out_infinite]"></div>

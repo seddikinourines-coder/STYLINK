@@ -1,0 +1,33 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "boutiques": "Boutiques",
+    "designers": "Rencontrez les Créateurs",
+    "ateliers": "Découvrez les Ateliers",
+    "fabric_retailers": "Vendeurs de Tissus",
+    "about": "À Propos"
+  },
+  "hero": {
+    "eyebrow": "Mode Algérienne Indépendante",
+    "title": "Où la Mode Rencontre",
+    "title_italic": "le Savoir-Faire",
+    "description": "Une curation exclusive des meilleurs designers, ateliers cachés, et fournisseurs de tissus d'exception en Algérie.",
+    "explore": "Explorer",
+    "our_designers": "Nos Designers",
+    "scroll": "Défiler"
+  },
+  "home": {
+    "new_arrivals": "Nouveautés",
+    "new_season": "La nouvelle saison",
+    "view_all_shop": "Voir toute la boutique",
+    "featured_designers": "Maisons à découvrir",
+    "featured_title": "Les créateurs en lumière",
+    "featured_subtitle": "Trois maisons qui réinventent l'élégance algérienne, entre tradition et avant-garde.",
+    "all_designers": "Tous les créateurs"
+  },
+  "languages": {
+    "en": "Anglais",
+    "fr": "Français",
+    "ar": "Arabe"
+  }
+}

@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 import { ArrowRight } from "lucide-react";
 import Hero from "@/components/home/Hero";
 import ProductCard from "@/components/ProductCard";
@@ -6,6 +7,7 @@ import FashionMap from "@/components/FashionMap";
 import { mockProducts, mockDesigners } from "@/data/mockData";
 
 export default function Home() {
+  const { t } = useTranslation();
   const newArrivals = mockProducts.filter((p) => p.isNew).slice(0, 4);
   const featuredDesigners = mockDesigners.slice(0, 3);
 
@@ -18,10 +20,10 @@ export default function Home() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-6">
           <div>
             <p className="text-[11px] uppercase tracking-[0.3em] text-primary mb-3 font-sans">
-              Nouveautés
+              {t('home.new_arrivals')}
             </p>
             <h2 className="font-serif text-4xl md:text-5xl text-foreground">
-              La nouvelle saison
+              {t('home.new_season')}
             </h2>
           </div>
           <Link
@@ -29,7 +31,7 @@ export default function Home() {
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-foreground hover:text-primary transition-colors border-b border-border hover:border-primary pb-1 self-start md:self-end"
             data-testid="link-shop-all"
           >
-            Voir toute la boutique <ArrowRight className="w-4 h-4" />
+            {t('home.view_all_shop')} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12">
@@ -44,14 +46,13 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center mb-16">
             <p className="text-[11px] uppercase tracking-[0.3em] text-primary mb-3 font-sans">
-              Maisons à découvrir
+              {t('home.featured_designers')}
             </p>
             <h2 className="font-serif text-4xl md:text-5xl text-foreground mb-4">
-              Les créateurs en lumière
+              {t('home.featured_title')}
             </h2>
             <p className="text-muted-foreground font-light max-w-xl mx-auto">
-              Trois maisons qui réinventent l'élégance algérienne, entre tradition
-              et avant-garde.
+              {t('home.featured_subtitle')}
             </p>
           </div>
 
@@ -89,7 +90,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 px-8 py-4 bg-foreground text-background text-xs uppercase tracking-[0.3em] hover:bg-primary transition-colors"
               data-testid="link-all-designers"
             >
-              Tous les créateurs <ArrowRight className="w-4 h-4" />
+              {t('home.all_designers')} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

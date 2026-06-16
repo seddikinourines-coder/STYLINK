@@ -1,0 +1,33 @@
+{
+  "nav": {
+    "home": "Home",
+    "boutiques": "Boutiques",
+    "designers": "Meet the Designers",
+    "ateliers": "Discover Ateliers",
+    "fabric_retailers": "Fabric Retailers",
+    "about": "About Us"
+  },
+  "hero": {
+    "eyebrow": "Independent Algerian Fashion",
+    "title": "Where Fashion Meets",
+    "title_italic": "Craftsmanship",
+    "description": "An exclusive curation of the best designers, hidden ateliers, and exceptional fabric suppliers in Algeria.",
+    "explore": "Explore",
+    "our_designers": "Our Designers",
+    "scroll": "Scroll"
+  },
+  "home": {
+    "new_arrivals": "New Arrivals",
+    "new_season": "The New Season",
+    "view_all_shop": "View All Shop",
+    "featured_designers": "Houses to Discover",
+    "featured_title": "Designers in the Spotlight",
+    "featured_subtitle": "Three houses reinventing Algerian elegance, between tradition and avant-garde.",
+    "all_designers": "All Designers"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "French",
+    "ar": "Arabic"
+  }
+}
