@@ -73,15 +73,6 @@ export default function Hero() {
           className="relative z-10 h-full container px-4 flex flex-col items-center justify-center text-center"
           style={reduced ? {} : { y: contentY, opacity: contentOpacity }}
         >
-          <motion.span
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="text-white/90 font-sans font-medium tracking-[0.3em] uppercase mb-6 text-xs md:text-sm"
-          >
-            Mode Algérienne Indépendante
-          </motion.span>
-
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
