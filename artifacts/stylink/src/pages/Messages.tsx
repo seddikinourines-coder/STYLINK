@@ -166,7 +166,7 @@ export default function Messages() {
                       className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground hover:border-primary hover:text-primary transition-colors"
                       aria-label="Voir comment mesurer à la maison"
                     >
-                      <Ruler2 className="w-4 h-4" />
+                      <Ruler className="w-4 h-4" />
                       Mesures
                     </button>
                   </DialogTrigger>
