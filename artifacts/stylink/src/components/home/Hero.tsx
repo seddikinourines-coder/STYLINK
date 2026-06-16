@@ -62,7 +62,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.div
-          className="relative z-10 h-full container px-4 flex flex-col items-center justify-center text-center"
+          className="relative z-10 h-full container px-6 md:px-12 flex flex-col items-center justify-center text-center"
           style={reduced ? {} : { y: contentY, opacity: contentOpacity }}
         >
           <motion.span
@@ -78,17 +78,17 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="text-5xl md:text-7xl lg:text-[100px] font-serif text-white mb-8 max-w-[1200px] leading-[0.95] drop-shadow-2xl flex flex-col items-center"
+            className="text-4xl md:text-6xl lg:text-7xl font-serif text-white mb-10 max-w-4xl leading-[1.1] drop-shadow-xl flex flex-col items-center"
           >
-            <span className="tracking-tight whitespace-nowrap">{t('hero.title')}</span>
-            <span className="italic font-light text-[#B8956A] mt-[-0.15em] whitespace-nowrap">{t('hero.title_italic')}</span>
+            <span className="tracking-tight">{t('hero.title')}</span>
+            <span className="italic font-light text-[#B8956A] mt-[-0.1em]">{t('hero.title_italic')}</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
-            className="text-white/85 text-lg md:text-xl max-w-3xl mb-12 font-sans font-light leading-relaxed"
+            className="text-white/85 text-base md:text-lg max-w-2xl mb-12 font-sans font-light leading-relaxed"
           >
             {t('hero.description')}
           </motion.p>
