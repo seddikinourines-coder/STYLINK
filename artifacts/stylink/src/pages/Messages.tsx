@@ -193,9 +193,10 @@ export default function Messages() {
                           <td className="px-3 py-4 font-medium">Tour de poitrine</td>
                           <td className="px-3 py-4">
                             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-muted">
-                              <svg viewBox="0 0 64 64" className="h-10 w-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth="3">
-                                <path d="M20 20c0-6 4-12 12-12s12 6 12 12v24c0 6-4 12-12 12s-12-6-12-12z" />
-                                <line x1="14" y1="28" x2="50" y2="28" strokeLinecap="round" />
+                              <svg viewBox="0 0 80 80" className="h-10 w-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M27 18c0-5 4-9 9-9s9 4 9 9v6H27v-6z" />
+                                <path d="M18 34h44c0 12-8 18-20 18S18 46 18 34z" />
+                                <path d="M18 34s6 4 21 4 21-4 21-4" strokeLinecap="round" />
                               </svg>
                             </div>
                           </td>
@@ -208,9 +209,10 @@ export default function Messages() {
                           <td className="px-3 py-4 font-medium">Tour de taille</td>
                           <td className="px-3 py-4">
                             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-muted">
-                              <svg viewBox="0 0 64 64" className="h-10 w-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth="3">
-                                <path d="M20 20c0-6 4-12 12-12s12 6 12 12v24c0 6-4 12-12 12s-12-6-12-12z" />
-                                <line x1="16" y1="34" x2="48" y2="34" strokeLinecap="round" />
+                              <svg viewBox="0 0 80 80" className="h-10 w-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M28 18c0-5 4-9 9-9s9 4 9 9v6H28v-6z" />
+                                <path d="M18 34h44c-4 14-10 20-22 20S18 48 18 34z" />
+                                <path d="M18 42h44" strokeLinecap="round" />
                               </svg>
                             </div>
                           </td>
@@ -223,10 +225,10 @@ export default function Messages() {
                           <td className="px-3 py-4 font-medium">Tour de hanche</td>
                           <td className="px-3 py-4">
                             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-muted">
-                              <svg viewBox="0 0 64 64" className="h-10 w-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth="3">
-                                <path d="M20 18c0-5 4-10 12-10s12 5 12 10v10h-24v-10z" />
-                                <path d="M16 30h32v16c0 6-4 10-12 10s-12-4-12-10v-16z" />
-                                <line x1="16" y1="36" x2="48" y2="36" strokeLinecap="round" />
+                              <svg viewBox="0 0 80 80" className="h-10 w-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M24 18c0-5 4-9 9-9s9 4 9 9v6H24v-6z" />
+                                <path d="M18 34h44c0 16-8 22-20 22S18 50 18 34z" />
+                                <path d="M18 42h44" strokeLinecap="round" />
                               </svg>
                             </div>
                           </td>
@@ -239,10 +241,10 @@ export default function Messages() {
                           <td className="px-3 py-4 font-medium">Tour de bras</td>
                           <td className="px-3 py-4">
                             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-muted">
-                              <svg viewBox="0 0 64 64" className="h-10 w-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth="3">
-                                <path d="M22 20c0-6 4-10 10-10s10 4 10 10v24" />
-                                <path d="M32 44l10 4v6" />
-                                <path d="M22 24l-6 6" />
+                              <svg viewBox="0 0 80 80" className="h-10 w-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M24 18c0-5 4-9 9-9s9 4 9 9v20" />
+                                <path d="M24 38c-6 8-10 18-10 22v4" />
+                                <path d="M42 38c6 8 10 18 10 22v4" />
                               </svg>
                             </div>
                           </td>
@@ -255,12 +257,11 @@ export default function Messages() {
                           <td className="px-3 py-4 font-medium">Longueur de jambe</td>
                           <td className="px-3 py-4">
                             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-muted">
-                              <svg viewBox="0 0 64 64" className="h-10 w-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth="3">
-                                <path d="M28 18h8" />
-                                <path d="M30 18v30" />
-                                <path d="M25 48h14" />
-                                <path d="M30 18c-6 8-10 22-12 30" />
-                                <path d="M34 18c6 8 10 22 12 30" />
+                              <svg viewBox="0 0 80 80" className="h-10 w-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M32 18v20" strokeLinecap="round" />
+                                <path d="M48 18v20" strokeLinecap="round" />
+                                <path d="M20 38c6 12 10 26 12 34" strokeLinecap="round" />
+                                <path d="M60 38c-6 12-10 26-12 34" strokeLinecap="round" />
                               </svg>
                             </div>
                           </td>
