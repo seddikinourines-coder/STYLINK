@@ -216,7 +216,8 @@ export default function Messages() {
                       </div>
                     </div>
                   </DialogContent>
-                </Dialog>
+                  </Dialog>
+                </header>
 
               <div className="flex-1 p-6 space-y-4 overflow-y-auto">
                 {active.messages.map((m) => (
