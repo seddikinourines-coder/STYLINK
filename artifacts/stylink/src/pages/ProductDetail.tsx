@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useRoute, Link } from "wouter";
-import { ArrowLeft, ShoppingBag, ChevronLeft, ChevronRight, Ruler } from "lucide-react";
+import { ArrowLeft, ShoppingBag, ChevronLeft, ChevronRight, Ruler, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/contexts/AppStore";
 import { useToast } from "@/hooks/use-toast";
 import NotFound from "@/pages/not-found";
 import { mockProducts, getDesignerById } from "@/data/mockData";
+import MeasurementGuide from "@/components/MeasurementGuide";
 
 const API = "/api";
 
@@ -123,7 +124,7 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          {/* Size chart */}
+          {/* Measurement guide */}
           <section>
             <div className="flex items-center gap-4 mb-8">
               <div className="flex-1 h-px bg-border" />
@@ -133,33 +134,7 @@ export default function ProductDetail() {
               </div>
               <div className="flex-1 h-px bg-border" />
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm font-sans">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-3 pr-6 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-normal">Taille</th>
-                    <th className="text-center py-3 px-6 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-normal">FR</th>
-                    <th className="text-center py-3 px-6 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-normal">Poitrine (cm)</th>
-                    <th className="text-center py-3 px-6 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-normal">Taille (cm)</th>
-                    <th className="text-center py-3 px-6 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-normal">Hanches (cm)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {SIZE_CHART.map((row, i) => (
-                    <tr key={row.label} className={`border-b border-border/50 ${i % 2 !== 0 ? "bg-muted/30" : ""}`}>
-                      <td className="py-3 pr-6 font-medium text-foreground">{row.label}</td>
-                      <td className="text-center py-3 px-6 text-muted-foreground">{row.fr}</td>
-                      <td className="text-center py-3 px-6 text-muted-foreground">{row.chest}</td>
-                      <td className="text-center py-3 px-6 text-muted-foreground">{row.waist}</td>
-                      <td className="text-center py-3 px-6 text-muted-foreground">{row.hips}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="text-[10px] text-muted-foreground mt-4 font-light">
-              Mesures en centimètres. En cas de doute entre deux tailles, nous recommandons de prendre la plus grande.
-            </p>
+            <MeasurementGuide />
           </section>
         </div>
       </article>
@@ -360,44 +335,7 @@ export default function ProductDetail() {
             </div>
             <div className="flex-1 h-px bg-border" />
           </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm font-sans">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 pr-6 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-normal">Taille</th>
-                  <th className="text-center py-3 px-6 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-normal">FR</th>
-                  <th className="text-center py-3 px-6 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-normal">Poitrine (cm)</th>
-                  <th className="text-center py-3 px-6 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-normal">Taille (cm)</th>
-                  <th className="text-center py-3 px-6 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-normal">Hanches (cm)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {SIZE_CHART.map((row, i) => (
-                  <tr
-                    key={row.label}
-                    className={`border-b border-border/50 transition-colors ${
-                      sizes.includes(row.label) ? "bg-primary/5" : ""
-                    } ${i % 2 === 0 ? "" : "bg-muted/30"}`}
-                  >
-                    <td className={`py-3 pr-6 font-medium ${sizes.includes(row.label) ? "text-primary" : "text-foreground"}`}>
-                      {row.label}
-                      {sizes.includes(row.label) && (
-                        <span className="ml-2 text-[9px] uppercase tracking-wider text-primary">disponible</span>
-                      )}
-                    </td>
-                    <td className="text-center py-3 px-6 text-muted-foreground">{row.fr}</td>
-                    <td className="text-center py-3 px-6 text-muted-foreground">{row.chest}</td>
-                    <td className="text-center py-3 px-6 text-muted-foreground">{row.waist}</td>
-                    <td className="text-center py-3 px-6 text-muted-foreground">{row.hips}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="text-[10px] text-muted-foreground mt-4 font-light">
-            Mesures en centimètres. En cas de doute entre deux tailles, nous recommandons de prendre la plus grande.
-          </p>
+          <MeasurementGuide />
         </section>
 
       </div>

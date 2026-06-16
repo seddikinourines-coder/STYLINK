@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { Send } from "lucide-react";
+import { Send, Ruler, X } from "lucide-react";
 import {
   mockConversations,
   getDesignerById,
   Conversation,
   Message,
 } from "@/data/mockData";
+import MeasurementGuide from "@/components/MeasurementGuide";
 
 export default function Messages() {
   const [conversations, setConversations] = useState<Conversation[]>(mockConversations);
   const [activeId, setActiveId] = useState<string>(mockConversations[0]?.id ?? "");
   const [draft, setDraft] = useState("");
+  const [mesuresOpen, setMesuresOpen] = useState(false);
 
   const active = conversations.find((c) => c.id === activeId);
   const activeDesigner = active ? getDesignerById(active.designerId) : undefined;
@@ -53,7 +55,8 @@ export default function Messages() {
         </h1>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 border border-border min-h-[600px]">
+      <div className="relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 border border-border min-h-[600px]">
         {/* Conversation list */}
         <aside className="border-b md:border-b-0 md:border-r border-border overflow-y-auto">
           {conversations.map((c) => {
@@ -170,6 +173,48 @@ export default function Messages() {
             </div>
           )}
         </div>
+      </div>
+
+        {/* Mesures floating button */}
+        <button
+          onClick={() => setMesuresOpen(true)}
+          className="fixed right-0 top-1/2 -translate-y-1/2 z-40 bg-background border border-border shadow-md px-3 py-4 flex flex-col items-center gap-1 text-[10px] uppercase tracking-[0.2em] text-foreground hover:text-primary hover:border-primary transition-colors"
+          style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
+          aria-label="Guide de mesure"
+        >
+          <Ruler className="w-4 h-4 mb-1" style={{ writingMode: "horizontal-tb" }} />
+          Mesures
+        </button>
+
+        {/* Mesures slide-in panel */}
+        {mesuresOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm"
+              onClick={() => setMesuresOpen(false)}
+            />
+            {/* Panel */}
+            <div className="fixed right-0 top-0 h-full z-50 w-full max-w-lg bg-background shadow-2xl overflow-y-auto flex flex-col">
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <div className="flex items-center gap-2">
+                  <Ruler className="w-4 h-4 text-primary" />
+                  <span className="text-[11px] uppercase tracking-[0.2em] text-primary font-medium">Guide de mesure</span>
+                </div>
+                <button
+                  onClick={() => setMesuresOpen(false)}
+                  className="p-2 rounded-full hover:bg-muted transition-colors"
+                  aria-label="Fermer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4">
+                <MeasurementGuide />
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );
