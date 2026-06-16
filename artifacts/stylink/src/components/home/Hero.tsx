@@ -62,24 +62,24 @@ export default function Hero() {
         </motion.div>
 
         <motion.div
-          className="relative z-10 h-full container px-6 md:px-12 flex flex-col items-center justify-center text-center"
+          className="relative z-10 h-full container px-6 flex flex-col items-center justify-center text-center mx-auto"
           style={reduced ? {} : { y: contentY, opacity: contentOpacity }}
         >
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-10 max-w-5xl leading-[1.1] drop-shadow-xl flex flex-col items-center"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-10 max-w-[90vw] lg:max-w-5xl leading-[1.1] drop-shadow-xl flex flex-col items-center"
           >
-            <span className="tracking-tight whitespace-nowrap inline-block">{t('hero.title')}</span>
-            <span className="italic font-light text-[#B8956A] mt-[-0.1em] whitespace-nowrap inline-block">{t('hero.title_italic')}</span>
+            <span className="tracking-tight block w-full">{t('hero.title')}</span>
+            <span className="italic font-light text-[#B8956A] mt-[-0.1em] block w-full">{t('hero.title_italic')}</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
-            className="text-white/85 text-base md:text-lg max-w-2xl mb-12 font-sans font-light leading-relaxed"
+            className="text-white/85 text-base md:text-lg max-w-2xl mb-12 font-sans font-light leading-relaxed px-4"
           >
             {t('hero.description')}
           </motion.p>
@@ -88,7 +88,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
+            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4"
           >
             <Button
               asChild
