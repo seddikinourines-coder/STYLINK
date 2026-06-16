@@ -76,7 +76,6 @@ export default function BoutiqueDirectory() {
 
   const filtered = useMemo(() => {
     let result = businesses.filter((b) => {
-      // Search query filter
       const q = query.toLowerCase().trim();
       const matchesQuery = !q || 
         b.name.toLowerCase().includes(q) ||
@@ -84,16 +83,12 @@ export default function BoutiqueDirectory() {
         (b.role ?? "").toLowerCase().includes(q) ||
         (b.bio ?? "").toLowerCase().includes(q);
 
-      // City filter
       const matchesCity = cityFilter === "all" || b.city === cityFilter;
-
-      // Role filter
       const matchesRole = roleFilter === "all" || b.role === roleFilter;
 
       return matchesQuery && matchesCity && matchesRole;
     });
 
-    // Sorting
     if (sortOrder === "price-asc") {
       result.sort((a, b) => Number(a.min_price || 0) - Number(b.min_price || 0));
     } else if (sortOrder === "price-desc") {
@@ -112,14 +107,13 @@ export default function BoutiqueDirectory() {
           Boutiques
         </p>
         <h1 className="font-serif text-5xl md:text-6xl text-foreground mb-4">
-          Adresses d'Exception
+          Exceptional Addresses
         </h1>
         <p className="text-muted-foreground font-light max-w-xl mx-auto">
-          Découvrez les créateurs, ateliers et boutiques algériennes inscrits sur STYLINK.
+          Discover Algerian creators, workshops, and boutiques registered on STYLINK.
         </p>
       </header>
 
-      {/* Search and Filters Bar */}
       <div className="space-y-8 mb-16">
         <div className="flex justify-center">
           <div className="w-full max-w-xl relative">
@@ -128,7 +122,7 @@ export default function BoutiqueDirectory() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Rechercher par nom, ville ou catégorie…"
+              placeholder="Search by name, city or category…"
               className="w-full h-14 pl-12 pr-4 bg-transparent border-b border-border focus:outline-none focus:border-primary transition-colors font-sans text-lg"
             />
           </div>
@@ -137,15 +131,15 @@ export default function BoutiqueDirectory() {
         <div className="flex flex-wrap items-center justify-center gap-4 pt-4 border-t border-border/50">
           <div className="flex items-center gap-2 mr-2 text-muted-foreground">
             <SlidersHorizontal className="w-4 h-4" />
-            <span className="text-[10px] uppercase tracking-widest font-medium">Filtres</span>
+            <span className="text-[10px] uppercase tracking-widest font-medium">Filters</span>
           </div>
 
           <Select value={cityFilter} onValueChange={setCityFilter}>
             <SelectTrigger className="w-[160px] h-10 rounded-none border-x-0 border-t-0 border-b border-border bg-transparent text-[10px] uppercase tracking-[0.2em]">
-              <SelectValue placeholder="VILLE" />
+              <SelectValue placeholder="CITY" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">TOUTES LES VILLES</SelectItem>
+              <SelectItem value="all">ALL CITIES</SelectItem>
               {cities.map(city => (
                 <SelectItem key={city} value={city}>{city.toUpperCase()}</SelectItem>
               ))}
@@ -154,10 +148,10 @@ export default function BoutiqueDirectory() {
 
           <Select value={roleFilter} onValueChange={setRoleFilter}>
             <SelectTrigger className="w-[160px] h-10 rounded-none border-x-0 border-t-0 border-b border-border bg-transparent text-[10px] uppercase tracking-[0.2em]">
-              <SelectValue placeholder="CATÉGORIE" />
+              <SelectValue placeholder="CATEGORY" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">TOUTES CATÉGORIES</SelectItem>
+              <SelectItem value="all">ALL CATEGORIES</SelectItem>
               {roles.map(role => (
                 <SelectItem key={role} value={role}>{role.toUpperCase()}</SelectItem>
               ))}
@@ -166,13 +160,13 @@ export default function BoutiqueDirectory() {
 
           <Select value={sortOrder} onValueChange={setSortOrder}>
             <SelectTrigger className="w-[180px] h-10 rounded-none border-x-0 border-t-0 border-b border-border bg-transparent text-[10px] uppercase tracking-[0.2em]">
-              <SelectValue placeholder="TRIER PAR" />
+              <SelectValue placeholder="SORT BY" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="default">TRI PAR DÉFAUT</SelectItem>
-              <SelectItem value="name-asc">NOM (A-Z)</SelectItem>
-              <SelectItem value="price-asc">PRIX CROISSANT</SelectItem>
-              <SelectItem value="price-desc">PRIX DÉCROISSANT</SelectItem>
+              <SelectItem value="default">DEFAULT SORT</SelectItem>
+              <SelectItem value="name-asc">NAME (A-Z)</SelectItem>
+              <SelectItem value="price-asc">PRICE: LOW TO HIGH</SelectItem>
+              <SelectItem value="price-desc">PRICE: HIGH TO LOW</SelectItem>
             </SelectContent>
           </Select>
           
@@ -186,7 +180,7 @@ export default function BoutiqueDirectory() {
               }}
               className="text-[10px] uppercase tracking-[0.2em] text-primary hover:underline ml-2"
             >
-              Réinitialiser
+              Reset
             </button>
           )}
         </div>
@@ -194,19 +188,19 @@ export default function BoutiqueDirectory() {
 
       {loading ? (
         <div className="py-32 text-center">
-          <p className="text-muted-foreground font-light">Chargement…</p>
+          <p className="text-muted-foreground font-light">Loading…</p>
         </div>
       ) : filtered.length === 0 ? (
         <div className="py-32 text-center">
           <h3 className="font-serif text-2xl text-foreground mb-3">
             {businesses.length === 0
-              ? "Aucun compte professionnel encore"
-              : "Aucun résultat trouvé"}
+              ? "No professional accounts yet"
+              : "No results found"}
           </h3>
           <p className="text-muted-foreground font-light">
             {businesses.length === 0
-              ? "Les professionnels qui créent un compte apparaîtront ici."
-              : "Essayez un autre nom ou une autre ville."}
+              ? "Professionals who create an account will appear here."
+              : "Try another name or city."}
           </p>
         </div>
       ) : (
@@ -221,7 +215,7 @@ export default function BoutiqueDirectory() {
                     <Avatar business={b} />
 
                     <span className="absolute top-3 left-3 bg-background/90 text-foreground text-[10px] uppercase tracking-[0.2em] px-3 py-1 z-10">
-                      {b.role ?? "Professionnel"}
+                      {b.role ?? "Professional"}
                     </span>
 
                     <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/40 to-transparent pointer-events-none" />
@@ -235,7 +229,7 @@ export default function BoutiqueDirectory() {
                         )}
                         {b.min_price && (
                           <p className="text-[10px] font-medium text-white/90 bg-white/10 px-2 py-0.5 rounded-sm">
-                            Dès {Number(b.min_price).toLocaleString()} DA
+                            From {Number(b.min_price).toLocaleString()} DA
                           </p>
                         )}
                       </div>
@@ -251,7 +245,7 @@ export default function BoutiqueDirectory() {
                   </div>
                   <div className="flex justify-between items-center">
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                      Voir la boutique
+                      View Boutique
                     </p>
                     {b.product_count && b.product_count > 0 && (
                       <span className="text-[10px] text-muted-foreground/60 italic">
@@ -266,12 +260,12 @@ export default function BoutiqueDirectory() {
                     e.stopPropagation();
                     toggleFavorite("boutiques", favId);
                     toast({
-                      title: fav ? "Retiré des favoris" : "Ajouté aux favoris",
+                      title: fav ? "Removed from favorites" : "Added to favorites",
                       description: b.name,
                     });
                   }}
                   className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center bg-background/80 backdrop-blur-sm hover:bg-background transition-colors z-10"
-                  aria-label={fav ? "Retirer des favoris" : "Ajouter aux favoris"}
+                  aria-label={fav ? "Remove from favorites" : "Add to favorites"}
                 >
                   <Heart
                     className={`w-4 h-4 ${fav ? "fill-primary text-primary" : "text-foreground"}`}
