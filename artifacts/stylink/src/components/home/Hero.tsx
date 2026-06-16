@@ -78,10 +78,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="text-6xl md:text-8xl lg:text-[110px] font-serif text-white mb-8 max-w-6xl leading-[0.9] drop-shadow-2xl flex flex-col items-center"
+            className="text-5xl md:text-7xl lg:text-[100px] font-serif text-white mb-8 max-w-[1200px] leading-[0.95] drop-shadow-2xl flex flex-col items-center"
           >
-            <span className="tracking-tight">{t('hero.title')}</span>
-            <span className="italic font-light text-[#B8956A] mt-[-0.15em]">{t('hero.title_italic')}</span>
+            <span className="tracking-tight whitespace-nowrap">{t('hero.title')}</span>
+            <span className="italic font-light text-[#B8956A] mt-[-0.15em] whitespace-nowrap">{t('hero.title_italic')}</span>
           </motion.h1>
 
           <motion.p
