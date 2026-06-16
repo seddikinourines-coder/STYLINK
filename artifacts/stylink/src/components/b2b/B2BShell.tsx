@@ -1,5 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import {
   Bell,
   Bookmark,
@@ -43,15 +44,15 @@ const roleLabels: Record<BusinessRole, string> = {
 
 interface TabDef {
   href: string;
-  label: string;
+  labelKey: string;
   icon: typeof Home;
 }
 
 const tabs: TabDef[] = [
-  { href: "/b2b", label: "Feed", icon: Home },
-  { href: "/b2b/network", label: "My Network", icon: Users },
-  { href: "/b2b/opportunities", label: "Opportunities", icon: Briefcase },
-  { href: "/b2b/messages", label: "Messages", icon: MessageCircle },
+  { href: "/b2b", labelKey: "b2b.tabs.feed", icon: Home },
+  { href: "/b2b/network", labelKey: "b2b.tabs.network", icon: Users },
+  { href: "/b2b/opportunities", labelKey: "b2b.tabs.opportunities", icon: Briefcase },
+  { href: "/b2b/messages", labelKey: "b2b.tabs.messages", icon: MessageCircle },
 ];
 
 function initialsFor(value: string): string {
@@ -64,6 +65,7 @@ function initialsFor(value: string): string {
 }
 
 export default function B2BShell({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
   const {
     user,
     signOut,
@@ -123,7 +125,7 @@ export default function B2BShell({ children }: { children: ReactNode }) {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher dans le réseau, opportunités, messages…"
+              placeholder={t('b2b.search_placeholder')}
               className="w-full pl-11 pr-4 h-10 text-sm bg-[#F5F3EE] rounded-full border border-transparent focus:border-primary/40 focus:bg-white focus:outline-none transition-colors placeholder:text-muted-foreground/70"
               data-testid="input-b2b-search"
             />
@@ -350,71 +352,6 @@ export default function B2BShell({ children }: { children: ReactNode }) {
                                   </Button>
                                 </div>
                               )}
-
-                            {n.kind === "application" &&
-                              n.applicationStatus === "accepted" && (
-                                <div className="flex items-center gap-2 mt-3">
-                                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-[10px] uppercase tracking-[0.18em]">
-                                    Acceptée
-                                  </span>
-                                </div>
-                              )}
-
-                            {n.kind === "application" &&
-                              n.applicationStatus === "declined" && (
-                                <div className="flex items-center gap-2 mt-3">
-                                  <span className="inline-flex items-center gap-1 rounded-full bg-red-50 text-red-700 px-3 py-1 text-[10px] uppercase tracking-[0.18em]">
-                                    Refusée
-                                  </span>
-                                </div>
-                              )}
-
-                            {n.kind === "application-accepted" && (
-                              <div className="flex items-center gap-2 mt-3">
-                                <Button
-                                  size="sm"
-                                  className="rounded-full h-8 px-4 text-xs gap-1.5"
-                                  data-testid={`button-open-chat-app-${n.id}`}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (n.ownerId) {
-                                      const params = new URLSearchParams({
-                                        with: n.ownerId,
-                                        ...(n.opportunityId
-                                          ? { opp: n.opportunityId }
-                                          : {}),
-                                      });
-                                      navigate(
-                                        `/b2b/messages?${params.toString()}`,
-                                      );
-                                    }
-                                  }}
-                                >
-                                  Ouvrir le chat
-                                </Button>
-                              </div>
-                            )}
-
-                            {isInvite && n.inviteStatus === "accepted" && (
-                              <div className="flex items-center gap-2 mt-3">
-                                <span
-                                  className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-[10px] uppercase tracking-[0.18em]"
-                                  data-testid={`badge-invite-accepted-${n.id}`}
-                                >
-                                  Acceptée
-                                </span>
-                                {project && (
-                                  <Link
-                                    href={`/b2b/projects/${project.id}`}
-                                    onClick={() => markAllNotificationsRead()}
-                                    className="text-xs underline-offset-4 hover:underline text-foreground/80"
-                                    data-testid={`link-open-project-${project.id}`}
-                                  >
-                                    Ouvrir le projet
-                                  </Link>
-                                )}
-                              </div>
-                            )}
                           </div>
                         </div>
                       </li>
@@ -424,168 +361,125 @@ export default function B2BShell({ children }: { children: ReactNode }) {
               </PopoverContent>
             </Popover>
 
-            {/* Avatar dropdown */}
+            {/* Profile Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition"
-                  aria-label="Mon compte"
-                  data-testid="button-avatar-menu"
+                  className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full hover:bg-muted transition-colors"
+                  data-testid="button-b2b-profile-menu"
                 >
-                  <Avatar className="h-9 w-9">
-                    <AvatarImage alt={displayName} />
-                    <AvatarFallback className="text-xs font-medium bg-primary/15 text-foreground">
-                      {initialsFor(displayName) || "ST"}
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="text-[10px] bg-primary/15">
+                      {initialsFor(displayName)}
                     </AvatarFallback>
                   </Avatar>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-64 rounded-2xl shadow-lg border-black/5 p-1.5"
-                data-testid="dropdown-avatar"
-              >
-                <DropdownMenuLabel className="font-serif px-3 py-3">
-                  <p className="text-base text-foreground leading-tight">
-                    {displayName}
-                  </p>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-sans mt-1">
-                    {role}
-                  </p>
+              <DropdownMenuContent align="end" className="w-56 rounded-2xl shadow-lg border-black/5">
+                <DropdownMenuLabel className="font-serif text-base pb-0">
+                  {displayName}
                 </DropdownMenuLabel>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground px-2 pb-2">
+                  {role}
+                </p>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="rounded-lg">
-                  <Link
-                    href="/b2b/projects"
-                    data-testid="menu-projects"
-                    className="cursor-pointer"
-                  >
-                    <FolderKanban className="w-4 h-4 mr-2" /> Mes projets
+                <DropdownMenuItem asChild>
+                  <Link href="/profile" className="cursor-pointer">
+                    <Users className="w-4 h-4 mr-2" />
+                    Mon profil
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild className="rounded-lg">
-                  <Link
-                    href="/b2b/orders"
-                    data-testid="menu-orders"
-                    className="cursor-pointer"
-                  >
-                    <ClipboardList className="w-4 h-4 mr-2" /> Commandes
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="rounded-lg">
-                  <Link
-                    href="/b2b/requests"
-                    data-testid="menu-requests"
-                    className="cursor-pointer"
-                  >
-                    <Inbox className="w-4 h-4 mr-2" /> Demandes
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="rounded-lg">
-                  <Link
-                    href="/b2b/catalog"
-                    data-testid="menu-catalog"
-                    className="cursor-pointer"
-                  >
-                    <Library className="w-4 h-4 mr-2" /> Catalogue
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="rounded-lg">
-                  <Link
-                    href="/b2b/shortlist"
-                    data-testid="menu-shortlist"
-                    className="cursor-pointer"
-                  >
-                    <Bookmark className="w-4 h-4 mr-2" /> Shortlist
+                <DropdownMenuItem asChild>
+                  <Link href="/b2b/shortlist" className="cursor-pointer">
+                    <Bookmark className="w-4 h-4 mr-2" />
+                    Mes favoris
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onSelect={() => {
-                    signOut();
-                    navigate("/");
-                  }}
-                  className="rounded-lg cursor-pointer"
-                  data-testid="menu-signout"
+                  onClick={() => signOut()}
+                  className="text-destructive focus:text-destructive cursor-pointer"
                 >
-                  <LogOut className="w-4 h-4 mr-2" /> Déconnexion
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Déconnexion
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
 
-        {/* Mobile expandable search */}
+        {/* Mobile search bar — only if open */}
         {mobileSearchOpen && (
-          <div className="md:hidden px-4 pb-3 -mt-1">
+          <div className="md:hidden px-4 pb-4 animate-in slide-in-from-top duration-200">
             <div className="relative">
-              <Search
-                className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-                strokeWidth={1.5}
-              />
+              <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
-                autoFocus
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Rechercher…"
-                className="w-full pl-11 pr-4 h-10 text-sm bg-[#F5F3EE] rounded-full border border-transparent focus:border-primary/40 focus:bg-white focus:outline-none transition-colors"
-                data-testid="input-b2b-search-mobile"
+                placeholder={t('b2b.search_placeholder')}
+                className="w-full pl-11 pr-4 h-11 text-sm bg-[#F5F3EE] rounded-xl border-none focus:ring-2 focus:ring-primary/30"
+                autoFocus
               />
             </div>
           </div>
         )}
-
-        {/* Tabs strip */}
-        <nav
-          className="border-t border-black/5 bg-white/95"
-          aria-label="Sections principales"
-        >
-          <div className="max-w-[1400px] mx-auto px-2 md:px-6">
-            <ul
-              role="tablist"
-              className="flex gap-1 md:gap-2 overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {tabs.map((tab) => {
-                const Icon = tab.icon;
-                const active =
-                  tab.href === "/b2b"
-                    ? location === "/b2b" || location === "/b2b/"
-                    : location === tab.href ||
-                      location.startsWith(tab.href + "/");
-                return (
-                  <li
-                    key={tab.href}
-                    role="presentation"
-                    className="snap-start shrink-0"
-                  >
-                    <Link
-                      href={tab.href}
-                      role="tab"
-                      aria-selected={active}
-                      data-testid={`tab-${tab.label.toLowerCase().replace(/\s+/g, "-")}`}
-                      className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
-                        active
-                          ? "border-primary text-foreground"
-                          : "border-transparent text-muted-foreground hover:text-foreground hover:border-black/10"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" strokeWidth={1.75} />
-                      <span>{tab.label}</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </nav>
       </header>
 
-      {/* Content area */}
-      <main className="flex-1">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-10">
+      {/* Navigation tabs */}
+      <nav className="bg-white border-b border-black/5 sticky top-16 z-30">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-6">
+          <div className="flex items-center gap-4 md:gap-8 overflow-x-auto no-scrollbar">
+            {tabs.map((tab) => {
+              const active =
+                tab.href === "/b2b"
+                  ? location === "/b2b"
+                  : location.startsWith(tab.href);
+              return (
+                <Link
+                  key={tab.href}
+                  href={tab.href}
+                  className={`flex items-center gap-2 py-4 border-b-2 transition-all whitespace-nowrap ${
+                    active
+                      ? "border-primary text-foreground"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                  data-testid={`link-tab-${tab.labelKey}`}
+                >
+                  <tab.icon className="w-4 h-4" strokeWidth={active ? 2 : 1.5} />
+                  <span className="text-sm font-medium">{t(tab.labelKey)}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </nav>
+
+      {/* Content */}
+      <main className="flex-1 py-6 md:py-8">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-6">
           {children}
         </div>
       </main>
+
+      {/* Bottom bar (Mobile only) */}
+      <div className="md:hidden sticky bottom-0 z-40 bg-white/95 backdrop-blur border-t border-black/5 flex justify-around items-center h-16 px-2">
+        <Link href="/b2b" className={`flex flex-col items-center gap-1 ${location === "/b2b" ? "text-primary" : "text-muted-foreground"}`}>
+          <Home className="w-5 h-5" />
+          <span className="text-[10px] font-medium">{t('b2b.tabs.feed')}</span>
+        </Link>
+        <Link href="/b2b/projects" className={`flex flex-col items-center gap-1 ${location.startsWith("/b2b/projects") ? "text-primary" : "text-muted-foreground"}`}>
+          <FolderKanban className="w-5 h-5" />
+          <span className="text-[10px] font-medium">Projets</span>
+        </Link>
+        <Link href="/b2b/catalog" className={`flex flex-col items-center gap-1 ${location.startsWith("/b2b/catalog") ? "text-primary" : "text-muted-foreground"}`}>
+          <Library className="w-5 h-5" />
+          <span className="text-[10px] font-medium">Catalogue</span>
+        </Link>
+        <Link href="/b2b/orders" className={`flex flex-col items-center gap-1 ${location.startsWith("/b2b/orders") ? "text-primary" : "text-muted-foreground"}`}>
+          <ClipboardList className="w-5 h-5" />
+          <span className="text-[10px] font-medium">Commandes</span>
+        </Link>
+      </div>
     </div>
   );
 }

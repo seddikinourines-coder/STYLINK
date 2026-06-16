@@ -92,6 +92,53 @@
     "days_3_5": "3 à 5 jours ouvrables",
     "days_5_7": "5 à 7 jours ouvrables"
   },
+  "b2b": {
+    "search_placeholder": "Rechercher dans le réseau, opportunités, messages...",
+    "tabs": {
+      "feed": "Flux",
+      "network": "Mon Réseau",
+      "opportunities": "Opportunités",
+      "messages": "Messages"
+    },
+    "composer": {
+      "placeholder": "Partagez votre idée, design ou besoin de collaboration...",
+      "add_image": "Ajouter une image",
+      "change_image": "Changer l'image",
+      "publish": "Publier"
+    },
+    "feed": {
+      "empty_title": "Aucune publication",
+      "empty_subtitle": "Essayez un autre terme de recherche.",
+      "load_more": "Chargement de nouvelles publications...",
+      "all_seen": "Vous avez tout vu",
+      "like": "J'aime",
+      "comment": "Commenter",
+      "connect": "Connecter",
+      "pending": "En attente...",
+      "connected": "Connecté",
+      "propose_collab": "Proposer collab",
+      "modify": "Modifier",
+      "delete": "Supprimer",
+      "save": "Sauvegarder",
+      "remove_save": "Retirer des favoris",
+      "likes": "j'aime",
+      "comments": "commentaires"
+    },
+    "network": {
+      "title": "Vos relations professionnelles",
+      "subtitle": "Recherchez par nom, rôle ou spécialité — connectez-vous, échangez ou invitez à collaborer.",
+      "connections": "relations",
+      "connection": "relation",
+      "suggested": "Suggéré pour vous",
+      "filter_all": "Tous",
+      "common_connections": "relations en commun"
+    },
+    "sidebar": {
+      "trending": "À la une",
+      "tip_of_the_day": "Conseil du jour",
+      "tip_content": "Complétez votre profil pour apparaître dans les suggestions de partenaires. Les profils complets reçoivent 3x plus de demandes."
+    }
+  },
   "languages": {
     "en": "Anglais",
     "fr": "Français",

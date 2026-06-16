@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import {
   LayoutGrid,
   List as ListIcon,
@@ -20,14 +21,6 @@ import PortfolioHoverGallery from "@/components/b2b/PortfolioHoverGallery";
 
 type RoleFilter = "all" | DesignerType;
 type ViewMode = "grid" | "list";
-
-const roleFilters: { value: RoleFilter; label: string }[] = [
-  { value: "all", label: "Tous" },
-  { value: "Designer", label: "Designers" },
-  { value: "Atelier", label: "Ateliers" },
-  { value: "Fournisseur", label: "Fournisseurs" },
-  { value: "Boutique", label: "Boutiques" },
-];
 
 const initials = (name: string) =>
   name
@@ -55,6 +48,7 @@ function ConnectButton({
   onNavigate: () => void;
   fullWidth?: boolean;
 }) {
+  const { t } = useTranslation();
   const base = `rounded-full text-xs gap-1.5 px-3 ${fullWidth ? "w-full" : ""}`;
   if (status === "connected") {
     return (
@@ -66,7 +60,7 @@ function ConnectButton({
         className={base}
       >
         <MessageCircle className="w-3.5 h-3.5" />
-        Message
+        {t('b2b.tabs.messages')}
       </Button>
     );
   }
@@ -79,7 +73,7 @@ function ConnectButton({
         data-testid={`button-pending-${designerId}`}
         className={`${base} text-muted-foreground`}
       >
-        En attente…
+        {t('b2b.feed.pending')}
       </Button>
     );
   }
@@ -92,7 +86,7 @@ function ConnectButton({
       className={base}
     >
       <UserPlus className="w-3.5 h-3.5" />
-      Connecter
+      {t('b2b.feed.connect')}
     </Button>
   );
 }
@@ -108,6 +102,7 @@ function ConnectionCard({
   onConnect: () => void;
   onDisconnect?: () => void;
 }) {
+  const { t } = useTranslation();
   const [, navigate] = useLocation();
   const [hovered, setHovered] = useState(false);
 
@@ -151,7 +146,7 @@ function ConnectionCard({
           {designer.specialty} · {designer.city}
         </p>
         <p className="text-[11px] text-muted-foreground/80 mt-1">
-          {Math.max(2, Math.round(designer.rating * 4))} relations en commun
+          {Math.max(2, Math.round(designer.rating * 4))} {t('b2b.network.common_connections')}
         </p>
 
         <div className="mt-4 flex gap-2">
@@ -165,7 +160,7 @@ function ConnectionCard({
                 className="rounded-full text-xs gap-1.5 px-3 flex-1"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
-                Message
+                {t('b2b.tabs.messages')}
               </Button>
               <Button
                 size="sm"
@@ -174,7 +169,7 @@ function ConnectionCard({
                 data-testid={`button-disconnect-${designer.id}`}
                 className="rounded-full text-xs gap-1.5 px-3 text-muted-foreground hover:text-destructive"
               >
-                Retirer
+                {t('b2b.feed.delete')}
               </Button>
             </>
           ) : (
@@ -203,6 +198,7 @@ function ConnectionListItem({
   onConnect: () => void;
   onDisconnect?: () => void;
 }) {
+  const { t } = useTranslation();
   const [, navigate] = useLocation();
   const [hovered, setHovered] = useState(false);
 
@@ -247,7 +243,7 @@ function ConnectionListItem({
           {designer.specialty} · {designer.city}
         </p>
         <p className="text-[11px] text-muted-foreground/80 mt-1 truncate">
-          {Math.max(2, Math.round(designer.rating * 4))} relations en commun
+          {Math.max(2, Math.round(designer.rating * 4))} {t('b2b.network.common_connections')}
         </p>
       </div>
 
@@ -262,7 +258,7 @@ function ConnectionListItem({
               className="rounded-full text-xs gap-1.5"
             >
               <MessageCircle className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Message</span>
+              <span className="hidden sm:inline">{t('b2b.tabs.messages')}</span>
             </Button>
             <Button
               size="sm"
@@ -271,7 +267,7 @@ function ConnectionListItem({
               data-testid={`button-disconnect-list-${designer.id}`}
               className="rounded-full text-xs gap-1.5 text-muted-foreground hover:text-destructive"
             >
-              <span className="hidden sm:inline">Retirer</span>
+              <span className="hidden sm:inline">{t('b2b.feed.delete')}</span>
             </Button>
           </>
         ) : (
@@ -289,6 +285,7 @@ function ConnectionListItem({
 
 
 export default function NetworkTab() {
+  const { t } = useTranslation();
   const {
     connections,
     toggleConnection,
@@ -306,7 +303,7 @@ export default function NetworkTab() {
 
   const myName =
     user?.type === "business"
-      ? (user as any).name ?? "Mon entreprise"
+      ? (user as any).brandName ?? "Mon entreprise"
       : "Mon entreprise";
 
   const matchesQuery = (d: Designer) => {
@@ -356,27 +353,34 @@ export default function NetworkTab() {
 
   const totalConnections = connections.length;
 
+  const roleFilters: { value: RoleFilter; label: string }[] = [
+    { value: "all", label: t('b2b.network.filter_all') },
+    { value: "Designer", label: "Designers" },
+    { value: "Atelier", label: "Ateliers" },
+    { value: "Fournisseur", label: "Fournisseurs" },
+    { value: "Boutique", label: "Boutiques" },
+  ];
+
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
           <p className="text-[11px] uppercase tracking-[0.22em] text-primary font-medium mb-2">
-            Mon réseau
+            {t('b2b.tabs.network')}
           </p>
           <h2 className="font-serif text-3xl text-foreground">
-            Vos relations professionnelles
+            {t('b2b.network.title')}
           </h2>
           <p className="text-sm text-muted-foreground font-light mt-2">
-            Recherchez par nom, rôle ou spécialité — connectez-vous, échangez
-            ou invitez à collaborer.
+            {t('b2b.network.subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Users className="w-4 h-4" />
             <span data-testid="text-connection-count">
-              {totalConnections} {totalConnections > 1 ? "relations" : "relation"}
+              {totalConnections} {totalConnections > 1 ? t('b2b.network.connections') : t('b2b.network.connection')}
             </span>
           </div>
           <div
@@ -444,28 +448,15 @@ export default function NetworkTab() {
       <section>
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-serif text-xl text-foreground">
-            Suggéré pour vous
+            {t('b2b.network.suggested')}
           </h3>
-          <p className="text-xs text-muted-foreground font-light">
-            {suggestions.length}{" "}
-            {suggestions.length > 1 ? "résultats" : "résultat"}
-          </p>
         </div>
-
         {suggestions.length === 0 ? (
-          <div
-            className="bg-white rounded-2xl shadow-sm border border-black/5 p-10 text-center"
-            data-testid="text-no-suggestions"
-          >
-            <p className="font-serif text-lg text-foreground mb-1">
-              Aucun profil trouvé
-            </p>
-            <p className="text-sm text-muted-foreground font-light">
-              Modifiez votre recherche ou changez de filtre.
-            </p>
+          <div className="p-12 text-center bg-white rounded-2xl border border-black/5">
+            <p className="text-muted-foreground font-light">{t('b2b.feed.empty_title')}</p>
           </div>
         ) : viewMode === "grid" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {suggestions.map((d) => (
               <ConnectionCard
                 key={d.id}
@@ -476,67 +467,13 @@ export default function NetworkTab() {
             ))}
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {suggestions.map((d) => (
               <ConnectionListItem
                 key={d.id}
                 designer={d}
                 connectStatus={getConnectStatus(d.id)}
                 onConnect={() => handleConnect(d)}
-              />
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* Your connections */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-serif text-xl text-foreground">Vos relations</h3>
-          {myConnections.length > 0 && (
-            <p className="text-xs text-muted-foreground font-light">
-              {myConnections.length}{" "}
-              {myConnections.length > 1 ? "relations" : "relation"}
-            </p>
-          )}
-        </div>
-        {myConnections.length === 0 ? (
-          <div
-            className="bg-white rounded-2xl shadow-sm border border-black/5 p-10 text-center"
-            data-testid="text-no-connections"
-          >
-            <p className="font-serif text-lg text-foreground mb-1">
-              {totalConnections === 0
-                ? "Vous n'avez pas encore de relations"
-                : "Aucun résultat dans vos relations"}
-            </p>
-            <p className="text-sm text-muted-foreground font-light">
-              {totalConnections === 0
-                ? "Connectez-vous avec les profils suggérés ci-dessus pour commencer."
-                : "Ajustez votre recherche ou votre filtre."}
-            </p>
-          </div>
-        ) : viewMode === "grid" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {myConnections.map((d) => (
-              <ConnectionCard
-                key={d.id}
-                designer={d}
-                connectStatus="connected"
-                onConnect={() => {}}
-                onDisconnect={() => toggleConnection(d.id)}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {myConnections.map((d) => (
-              <ConnectionListItem
-                key={d.id}
-                designer={d}
-                connectStatus="connected"
-                onConnect={() => {}}
-                onDisconnect={() => toggleConnection(d.id)}
               />
             ))}
           </div>

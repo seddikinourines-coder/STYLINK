@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import {
   Bookmark,
   Check,
@@ -118,6 +119,7 @@ function PostCard({
   onDelete?: () => void;
   onEdit?: () => void;
 }) {
+  const { t } = useTranslation();
   const [, navigate] = useLocation();
   const isMe = post.authorId === "_me" || !!(post as any)._isCurrentUser;
   const author = (!isMe && !(post as any)._db) ? getDesignerById(post.authorId) : undefined;
@@ -188,7 +190,7 @@ function PostCard({
           <button
             onClick={onToggleSave}
             aria-pressed={saved}
-            aria-label={saved ? "Retirer des favoris" : "Sauvegarder"}
+            aria-label={saved ? t('b2b.feed.remove_save') : t('b2b.feed.save')}
             data-testid={`button-save-${post.id}`}
             className={`p-2 rounded-full transition-colors ${
               saved
@@ -220,7 +222,7 @@ function PostCard({
                     data-testid={`button-edit-post-${post.id}`}
                   >
                     <Pencil className="w-3.5 h-3.5 mr-2" />
-                    Modifier
+                    {t('b2b.feed.modify')}
                   </DropdownMenuItem>
                 )}
                 {onDelete && (
@@ -230,7 +232,7 @@ function PostCard({
                     data-testid={`button-delete-post-${post.id}`}
                   >
                     <Trash2 className="w-3.5 h-3.5 mr-2" />
-                    Supprimer
+                    {t('b2b.feed.delete')}
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
@@ -261,10 +263,10 @@ function PostCard({
       {/* Stats */}
       <div className="px-5 py-2 flex items-center justify-between text-[11px] text-muted-foreground border-t border-black/5">
         <span data-testid={`text-like-count-${post.id}`}>
-          {post.likes + (liked ? 1 : 0)} j'aime
+          {post.likes + (liked ? 1 : 0)} {t('b2b.feed.likes')}
         </span>
         <span>
-          {commentCount} commentaires
+          {commentCount} {t('b2b.feed.comments')}
           {post.shares ? ` · ${post.shares} partages` : ""}
         </span>
       </div>
@@ -290,10 +292,10 @@ function PostCard({
               <UserPlus className="w-4 h-4" strokeWidth={1.75} />
             )}
             {connectStatus === "connected"
-              ? "Connecté"
+              ? t('b2b.feed.connected')
               : connectStatus === "pending"
-                ? "En attente…"
-                : "Connecter"}
+                ? t('b2b.feed.pending')
+                : t('b2b.feed.connect')}
           </button>
         )}
         {!isMe && (
@@ -303,7 +305,7 @@ function PostCard({
             className="flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium text-foreground bg-muted hover:bg-muted/70 transition-colors"
           >
             <Handshake className="w-4 h-4" strokeWidth={1.75} />
-            Proposer collab
+            {t('b2b.feed.propose_collab')}
           </button>
         )}
         <button
@@ -320,7 +322,7 @@ function PostCard({
             className={`w-4 h-4 ${liked ? "fill-current" : ""}`}
             strokeWidth={1.75}
           />
-          J'aime
+          {t('b2b.feed.like')}
         </button>
         <button
           onClick={() => onCommentChange(commentOpen ? "\x00toggle-close" : "\x00toggle-open")}
@@ -332,7 +334,7 @@ function PostCard({
           } ${isMe ? "col-span-1 sm:col-span-2" : ""}`}
         >
           <MessageSquare className="w-4 h-4" strokeWidth={1.75} />
-          Commenter
+          {t('b2b.feed.comment')}
         </button>
       </div>
 
@@ -399,6 +401,7 @@ function PostCard({
 }
 
 export default function FeedTab() {
+  const { t } = useTranslation();
   const { user, pushNotification, isConnected, pendingConnections, addPendingConnection } = useAppStore();
   const { search } = useB2BShell();
   const [, navigate] = useLocation();
@@ -498,7 +501,7 @@ export default function FeedTab() {
     const obs = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
-          setVisibleCount((c) => Math.min(c + PAGE_SIZE, filtered.length));
+          setVisibleCount((prev) => prev + PAGE_SIZE);
         }
       },
       { rootMargin: "200px 0px" },
@@ -506,8 +509,6 @@ export default function FeedTab() {
     obs.observe(node);
     return () => obs.disconnect();
   }, [hasMore, filtered.length, visiblePosts.length]);
-
-
 
   function pickImage() {
     fileInputRef.current?.click();
@@ -647,7 +648,7 @@ export default function FeedTab() {
               <textarea
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
-                placeholder="Partagez votre idée, design ou besoin de collaboration…"
+                placeholder={t('b2b.composer.placeholder')}
                 rows={2}
                 className="w-full bg-[#F5F3EE] rounded-xl px-4 py-3 text-sm font-light placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
                 data-testid="textarea-feed-composer"
@@ -699,7 +700,7 @@ export default function FeedTab() {
                   data-testid="button-add-image"
                 >
                   <ImageIcon className="w-4 h-4" strokeWidth={1.5} />
-                  {draftImage ? "Changer l'image" : "Ajouter une image"}
+                  {draftImage ? t('b2b.composer.change_image') : t('b2b.composer.add_image')}
                 </button>
                 <Button
                   size="sm"
@@ -709,7 +710,7 @@ export default function FeedTab() {
                   data-testid="button-publish-post"
                 >
                   <Send className="w-3.5 h-3.5" />
-                  Publier
+                  {t('b2b.composer.publish')}
                 </Button>
               </div>
             </div>
@@ -724,10 +725,10 @@ export default function FeedTab() {
               strokeWidth={1.25}
             />
             <p className="font-serif text-lg text-foreground mb-1">
-              Aucune publication
+              {t('b2b.feed.empty_title')}
             </p>
             <p className="text-sm text-muted-foreground font-light">
-              Essayez un autre terme de recherche.
+              {t('b2b.feed.empty_subtitle')}
             </p>
           </div>
         ) : (
@@ -740,7 +741,7 @@ export default function FeedTab() {
               <div key={post.id}>
                 {isEditing ? (
                   <div className="bg-white rounded-2xl shadow-sm border border-black/5 p-4 space-y-3">
-                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-sans">Modifier la publication</p>
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-sans">{t('b2b.feed.modify')}</p>
                     <textarea
                       value={editDraft}
                       onChange={(e) => setEditDraft(e.target.value)}
@@ -792,12 +793,12 @@ export default function FeedTab() {
             className="py-6 text-center text-xs text-muted-foreground"
             data-testid="feed-load-more-sentinel"
           >
-            Chargement de nouvelles publications…
+            {t('b2b.feed.load_more')}
           </div>
         )}
         {!hasMore && visiblePosts.length > 0 && (
           <div className="py-6 text-center text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-            Vous avez tout vu
+            {t('b2b.feed.all_seen')}
           </div>
         )}
       </div>
@@ -807,7 +808,7 @@ export default function FeedTab() {
         <div className="sticky top-32 space-y-4">
           <div className="bg-white rounded-2xl shadow-sm border border-black/5 p-5">
             <p className="text-[11px] uppercase tracking-[0.22em] text-primary mb-3 font-medium">
-              À la une
+              {t('b2b.sidebar.trending')}
             </p>
             <ul className="space-y-3 text-sm">
               <li className="text-foreground/90 font-light leading-snug">
@@ -823,11 +824,10 @@ export default function FeedTab() {
           </div>
           <div className="bg-white rounded-2xl shadow-sm border border-black/5 p-5">
             <p className="text-[11px] uppercase tracking-[0.22em] text-primary mb-3 font-medium">
-              Conseil du jour
+              {t('b2b.sidebar.tip_of_the_day')}
             </p>
             <p className="text-sm text-foreground/90 font-light leading-relaxed">
-              Complétez votre profil pour apparaître dans les suggestions de
-              partenaires. Les profils complets reçoivent 3× plus de demandes.
+              {t('b2b.sidebar.tip_content')}
             </p>
           </div>
         </div>

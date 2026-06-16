@@ -92,6 +92,53 @@
     "days_3_5": "3 to 5 business days",
     "days_5_7": "5 to 7 business days"
   },
+  "b2b": {
+    "search_placeholder": "Search in network, opportunities, messages...",
+    "tabs": {
+      "feed": "Feed",
+      "network": "My Network",
+      "opportunities": "Opportunities",
+      "messages": "Messages"
+    },
+    "composer": {
+      "placeholder": "Share your idea, design, or collaboration need...",
+      "add_image": "Add an image",
+      "change_image": "Change image",
+      "publish": "Publish"
+    },
+    "feed": {
+      "empty_title": "No posts",
+      "empty_subtitle": "Try another search term.",
+      "load_more": "Loading new posts...",
+      "all_seen": "You've seen everything",
+      "like": "Like",
+      "comment": "Comment",
+      "connect": "Connect",
+      "pending": "Pending...",
+      "connected": "Connected",
+      "propose_collab": "Propose collab",
+      "modify": "Modify",
+      "delete": "Delete",
+      "save": "Save",
+      "remove_save": "Remove from saved",
+      "likes": "likes",
+      "comments": "comments"
+    },
+    "network": {
+      "title": "Your Professional Relations",
+      "subtitle": "Search by name, role or specialty — connect, exchange or invite to collaborate.",
+      "connections": "relations",
+      "connection": "relation",
+      "suggested": "Suggested for you",
+      "filter_all": "All",
+      "common_connections": "common relations"
+    },
+    "sidebar": {
+      "trending": "Trending",
+      "tip_of_the_day": "Tip of the Day",
+      "tip_content": "Complete your profile to appear in partner suggestions. Complete profiles receive 3x more requests."
+    }
+  },
   "languages": {
     "en": "English",
     "fr": "French",
