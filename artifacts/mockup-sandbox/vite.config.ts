@@ -5,12 +5,27 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { mockupPreviewPlugin } from "./mockupPreviewPlugin";
 
-// PORT is only required when running the dev server (Replit), not during build
 const rawPort = process.env.PORT;
-const port = rawPort ? Number(rawPort) : 3000;
 
-// BASE_PATH is optional; defaults to "/" for Netlify
-const basePath = process.env.BASE_PATH ?? "/";
+if (!rawPort) {
+  throw new Error(
+    "PORT environment variable is required but was not provided.",
+  );
+}
+
+const port = Number(rawPort);
+
+if (Number.isNaN(port) || port <= 0) {
+  throw new Error(`Invalid PORT value: "${rawPort}"`);
+}
+
+const basePath = process.env.BASE_PATH;
+
+if (!basePath) {
+  throw new Error(
+    "BASE_PATH environment variable is required but was not provided.",
+  );
+}
 
 export default defineConfig({
   base: basePath,

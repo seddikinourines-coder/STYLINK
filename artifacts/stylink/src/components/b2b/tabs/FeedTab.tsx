@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import {
   Bookmark,
@@ -45,7 +45,32 @@ const designerTypeLabels: Record<string, string> = {
   "fabric-retailer": "Maison de tissus",
 };
 
-const ME_AUTHOR_ID = "_me";
+// Posts created by real users (stored in Supabase)
+interface DbPost {
+  id: string;
+  author_id: string;
+  author_name: string;
+  author_role: string;
+  body: string;
+  image?: string | null;
+  created_at: string;
+}
+
+function dbPostToFeedPost(p: DbPost): FeedPost & { _db?: true; _authorName?: string; _authorRole?: string } {
+  return {
+    id: p.id,
+    authorId: p.author_id,
+    body: p.body,
+    image: p.image ?? undefined,
+    timestamp: new Date(p.created_at).toLocaleString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }),
+    likes: 0,
+    comments: 0,
+    _db: true,
+    _authorName: p.author_name,
+    _authorRole: p.author_role,
+  };
+}
+
 const PAGE_SIZE = 4;
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 
@@ -94,24 +119,24 @@ function PostCard({
   onEdit?: () => void;
 }) {
   const [, navigate] = useLocation();
-  const isMe = post.authorId === ME_AUTHOR_ID;
-  const author = isMe ? undefined : getDesignerById(post.authorId);
+  const isMe = post.authorId === "_me" || !!(post as any)._isCurrentUser;
+  const author = (!isMe && !(post as any)._db) ? getDesignerById(post.authorId) : undefined;
 
-  const name = isMe ? meName : (author?.name ?? "Membre Stylink");
-  const roleKey = isMe ? "me" : (author?.type ?? "designer");
-  const role = isMe ? meRole : (designerTypeLabels[roleKey] ?? "Designer");
-  const city = isMe ? undefined : author?.city;
-  const avatarSrc = isMe ? undefined : author?.image;
+  const name = isMe ? meName : ((post as any)._authorName ?? author?.name ?? "Membre Stylink");
+  const roleKey = isMe ? "me" : ((post as any)._authorRole ?? author?.type ?? "designer");
+  const role = isMe ? meRole : (roleLabels[roleKey as BusinessRole] ?? designerTypeLabels[roleKey] ?? "Designer");
+  const city = (!isMe && !((post as any)._db)) ? author?.city : undefined;
+  const avatarSrc = (!isMe && !((post as any)._db)) ? author?.image : undefined;
   const initials = isMe
     ? meInitials || "ST"
     : name
         .split(/\s+/)
         .slice(0, 2)
-        .map((w) => w[0])
+        .map((w: string) => w[0])
         .join("");
 
   const commentCount = post.comments + localComments.length;
-  const profileHref = isMe ? undefined : `/designers/${post.authorId}`;
+  const profileHref = (!isMe && !((post as any)._db)) ? `/designers/${post.authorId}` : undefined;
 
   return (
     <article
@@ -381,7 +406,9 @@ export default function FeedTab() {
   const [draft, setDraft] = useState("");
   const [draftImage, setDraftImage] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
-  const [composedPosts, setComposedPosts] = useState<FeedPost[]>([]);
+  // db posts fetched from Supabase
+  const [dbPosts, setDbPosts] = useState<(FeedPost & { _db?: true; _authorName?: string; _authorRole?: string })[]>([]);
+  const [loadingPosts, setLoadingPosts] = useState(true);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editDraft, setEditDraft] = useState("");
   const [liked, setLiked] = useState<Record<string, boolean>>({});
@@ -394,8 +421,39 @@ export default function FeedTab() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
+  // Fetch posts from Supabase on mount
+  const fetchPosts = useCallback(async () => {
+    setLoadingPosts(true);
+    try {
+      const res = await fetch("/api/posts");
+      const data: DbPost[] = await res.json();
+      setDbPosts(Array.isArray(data) ? data.map(dbPostToFeedPost) : []);
+    } catch {
+      setDbPosts([]);
+    } finally {
+      setLoadingPosts(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchPosts(); }, [fetchPosts]);
+
+  const isBusiness = !!user && user.type === "business";
+  const myName = !user
+    ? "Vous"
+    : user.type === "business"
+      ? user.brandName
+      : user.name;
+  const myRole = isBusiness && user ? roleLabels[user.role] : "Membre";
+  const myAuthorId = user?.email ? `user-${user.email.toLowerCase().replace(/[^a-z0-9]/g, "-")}` : "_me";
+  const initials = myName
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? "")
+    .join("");
+
+  // Combine db posts with static mock posts (db first)
   const baseFeed = useMemo<FeedPost[]>(() => {
-    const cycles = 5;
+    const cycles = 3;
     const out: FeedPost[] = [];
     for (let i = 0; i < cycles; i++) {
       for (const p of mockFeedPosts) {
@@ -405,21 +463,20 @@ export default function FeedTab() {
     return out;
   }, []);
 
-  const allPosts = useMemo<FeedPost[]>(
-    () => [...composedPosts, ...baseFeed],
-    [composedPosts, baseFeed],
-  );
+  const allPosts = useMemo(() => [...dbPosts, ...baseFeed], [dbPosts, baseFeed]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return allPosts;
     return allPosts.filter((p) => {
+      const dbName = (p as any)._authorName ?? "";
       const author = getDesignerById(p.authorId);
       return (
         p.body.toLowerCase().includes(q) ||
+        dbName.toLowerCase().includes(q) ||
         (author?.name.toLowerCase().includes(q) ?? false) ||
-        (author?.specialty.toLowerCase().includes(q) ?? false) ||
-        (author?.city.toLowerCase().includes(q) ?? false)
+        (author?.specialty?.toLowerCase().includes(q) ?? false) ||
+        (author?.city?.toLowerCase().includes(q) ?? false)
       );
     });
   }, [allPosts, search]);

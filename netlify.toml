@@ -14,6 +14,30 @@
   status = 200
 
 [[redirects]]
+  from = "/api/posts"
+  to = "/.netlify/functions/posts-list"
+  status = 200
+  conditions = {Method = ["GET"]}
+
+[[redirects]]
+  from = "/api/posts"
+  to = "/.netlify/functions/posts-create"
+  status = 200
+  conditions = {Method = ["POST"]}
+
+[[redirects]]
+  from = "/api/posts"
+  to = "/.netlify/functions/posts-delete"
+  status = 200
+  conditions = {Method = ["DELETE"]}
+
+[[redirects]]
+  from = "/api/posts"
+  to = "/.netlify/functions/posts-edit"
+  status = 200
+  conditions = {Method = ["PATCH"]}
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
