@@ -88,10 +88,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="text-5xl md:text-7xl lg:text-9xl font-serif text-white mb-8 max-w-6xl leading-[1.05] drop-shadow-2xl"
+            className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 max-w-5xl leading-[1.1] drop-shadow-xl"
           >
-            {t('hero.title')} <br />
-            <span className="italic font-light text-[#B8956A]">{t('hero.title_italic')}</span>
+            <span className="block mb-2">{t('hero.title')}</span>
+            <span className="italic font-light text-[#B8956A] block mt-[-0.2em]">{t('hero.title_italic')}</span>
           </motion.h1>
 
           <motion.p
