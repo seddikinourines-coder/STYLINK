@@ -1,8 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "wouter";
-import { Search, Heart } from "lucide-react";
+import { Search, Heart, SlidersHorizontal } from "lucide-react";
 import { useAppStore } from "@/contexts/AppStore";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const API = "/api";
 
@@ -14,6 +21,9 @@ interface Business {
   role: string | null;
   bio: string | null;
   avatar_url: string | null;
+  min_price?: string | number | null;
+  max_price?: string | number | null;
+  product_count?: number;
 }
 
 function Avatar({ business }: { business: Business }) {
@@ -39,6 +49,10 @@ export default function BoutiqueDirectory() {
   const [query, setQuery] = useState("");
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cityFilter, setCityFilter] = useState("all");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [sortOrder, setSortOrder] = useState("default");
+  
   const { isFavorite, toggleFavorite } = useAppStore();
   const { toast } = useToast();
 
@@ -50,16 +64,46 @@ export default function BoutiqueDirectory() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered = businesses.filter((b) => {
-    if (!query.trim()) return true;
-    const q = query.toLowerCase();
-    return (
-      b.name.toLowerCase().includes(q) ||
-      (b.city ?? "").toLowerCase().includes(q) ||
-      (b.role ?? "").toLowerCase().includes(q) ||
-      (b.bio ?? "").toLowerCase().includes(q)
-    );
-  });
+  const cities = useMemo(() => {
+    const uniqueCities = new Set(businesses.map(b => b.city).filter(Boolean));
+    return Array.from(uniqueCities).sort() as string[];
+  }, [businesses]);
+
+  const roles = useMemo(() => {
+    const uniqueRoles = new Set(businesses.map(b => b.role).filter(Boolean));
+    return Array.from(uniqueRoles).sort() as string[];
+  }, [businesses]);
+
+  const filtered = useMemo(() => {
+    let result = businesses.filter((b) => {
+      // Search query filter
+      const q = query.toLowerCase().trim();
+      const matchesQuery = !q || 
+        b.name.toLowerCase().includes(q) ||
+        (b.city ?? "").toLowerCase().includes(q) ||
+        (b.role ?? "").toLowerCase().includes(q) ||
+        (b.bio ?? "").toLowerCase().includes(q);
+
+      // City filter
+      const matchesCity = cityFilter === "all" || b.city === cityFilter;
+
+      // Role filter
+      const matchesRole = roleFilter === "all" || b.role === roleFilter;
+
+      return matchesQuery && matchesCity && matchesRole;
+    });
+
+    // Sorting
+    if (sortOrder === "price-asc") {
+      result.sort((a, b) => Number(a.min_price || 0) - Number(b.min_price || 0));
+    } else if (sortOrder === "price-desc") {
+      result.sort((a, b) => Number(b.max_price || 0) - Number(a.max_price || 0));
+    } else if (sortOrder === "name-asc") {
+      result.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    return result;
+  }, [businesses, query, cityFilter, roleFilter, sortOrder]);
 
   return (
     <section className="container mx-auto px-4 md:px-8 py-20">
@@ -75,16 +119,76 @@ export default function BoutiqueDirectory() {
         </p>
       </header>
 
-      <div className="flex justify-center mb-16">
-        <div className="w-full max-w-xl relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Rechercher par nom, ville ou catégorie…"
-            className="w-full h-14 pl-12 pr-4 bg-transparent border-b border-border focus:outline-none focus:border-primary transition-colors font-sans"
-          />
+      {/* Search and Filters Bar */}
+      <div className="space-y-8 mb-16">
+        <div className="flex justify-center">
+          <div className="w-full max-w-xl relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Rechercher par nom, ville ou catégorie…"
+              className="w-full h-14 pl-12 pr-4 bg-transparent border-b border-border focus:outline-none focus:border-primary transition-colors font-sans text-lg"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 pt-4 border-t border-border/50">
+          <div className="flex items-center gap-2 mr-2 text-muted-foreground">
+            <SlidersHorizontal className="w-4 h-4" />
+            <span className="text-[10px] uppercase tracking-widest font-medium">Filtres</span>
+          </div>
+
+          <Select value={cityFilter} onValueChange={setCityFilter}>
+            <SelectTrigger className="w-[160px] h-10 rounded-none border-x-0 border-t-0 border-b border-border bg-transparent text-[10px] uppercase tracking-[0.2em]">
+              <SelectValue placeholder="VILLE" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">TOUTES LES VILLES</SelectItem>
+              {cities.map(city => (
+                <SelectItem key={city} value={city}>{city.toUpperCase()}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={roleFilter} onValueChange={setRoleFilter}>
+            <SelectTrigger className="w-[160px] h-10 rounded-none border-x-0 border-t-0 border-b border-border bg-transparent text-[10px] uppercase tracking-[0.2em]">
+              <SelectValue placeholder="CATÉGORIE" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">TOUTES CATÉGORIES</SelectItem>
+              {roles.map(role => (
+                <SelectItem key={role} value={role}>{role.toUpperCase()}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={sortOrder} onValueChange={setSortOrder}>
+            <SelectTrigger className="w-[180px] h-10 rounded-none border-x-0 border-t-0 border-b border-border bg-transparent text-[10px] uppercase tracking-[0.2em]">
+              <SelectValue placeholder="TRIER PAR" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="default">TRI PAR DÉFAUT</SelectItem>
+              <SelectItem value="name-asc">NOM (A-Z)</SelectItem>
+              <SelectItem value="price-asc">PRIX CROISSANT</SelectItem>
+              <SelectItem value="price-desc">PRIX DÉCROISSANT</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          {(cityFilter !== "all" || roleFilter !== "all" || sortOrder !== "default" || query) && (
+            <button 
+              onClick={() => {
+                setCityFilter("all");
+                setRoleFilter("all");
+                setSortOrder("default");
+                setQuery("");
+              }}
+              className="text-[10px] uppercase tracking-[0.2em] text-primary hover:underline ml-2"
+            >
+              Réinitialiser
+            </button>
+          )}
         </div>
       </div>
 
@@ -123,11 +227,18 @@ export default function BoutiqueDirectory() {
                     <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/40 to-transparent pointer-events-none" />
 
                     <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                      {b.city && (
-                        <p className="text-[10px] uppercase tracking-[0.25em] text-white/70 mb-1">
-                          {b.city}
-                        </p>
-                      )}
+                      <div className="flex justify-between items-end mb-1">
+                        {b.city && (
+                          <p className="text-[10px] uppercase tracking-[0.25em] text-white/70">
+                            {b.city}
+                          </p>
+                        )}
+                        {b.min_price && (
+                          <p className="text-[10px] font-medium text-white/90 bg-white/10 px-2 py-0.5 rounded-sm">
+                            Dès {Number(b.min_price).toLocaleString()} DA
+                          </p>
+                        )}
+                      </div>
                       <h3 className="font-serif text-2xl leading-tight mb-2">
                         {b.name}
                       </h3>
@@ -138,9 +249,16 @@ export default function BoutiqueDirectory() {
                       )}
                     </div>
                   </div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                    Voir la boutique
-                  </p>
+                  <div className="flex justify-between items-center">
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                      Voir la boutique
+                    </p>
+                    {b.product_count && b.product_count > 0 && (
+                      <span className="text-[10px] text-muted-foreground/60 italic">
+                        {b.product_count} article{b.product_count > 1 ? 's' : ''}
+                      </span>
+                    )}
+                  </div>
                 </Link>
                 <button
                   onClick={(e) => {

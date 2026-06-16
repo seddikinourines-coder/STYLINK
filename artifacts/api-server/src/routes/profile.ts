@@ -42,6 +42,8 @@ profileRouter.put("/profile/:id", async (req, res) => {
   }
 });
 
+import { sql } from "drizzle-orm";
+
 profileRouter.get("/businesses", async (req, res) => {
   try {
     const businesses = await db
@@ -53,9 +55,14 @@ profileRouter.get("/businesses", async (req, res) => {
         role: stylink_users.role,
         bio: stylink_users.bio,
         avatar_url: stylink_users.avatar_url,
+        min_price: sql<number>`MIN(${user_products.price})`,
+        max_price: sql<number>`MAX(${user_products.price})`,
+        product_count: sql<number>`COUNT(${user_products.id})`,
       })
       .from(stylink_users)
+      .leftJoin(user_products, eq(stylink_users.id, user_products.user_id))
       .where(eq(stylink_users.type, "business"))
+      .groupBy(stylink_users.id)
       .orderBy(stylink_users.created_at);
     res.json(businesses);
   } catch (err) {
