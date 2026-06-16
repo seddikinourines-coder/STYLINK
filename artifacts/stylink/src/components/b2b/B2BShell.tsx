@@ -7,6 +7,7 @@ import {
   Briefcase,
   ClipboardList,
   FolderKanban,
+  Globe,
   Home,
   Inbox,
   Library,
@@ -65,7 +66,7 @@ function initialsFor(value: string): string {
 }
 
 export default function B2BShell({ children }: { children: ReactNode }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     user,
     signOut,
@@ -83,6 +84,10 @@ export default function B2BShell({ children }: { children: ReactNode }) {
   const [location, navigate] = useLocation();
   const { search, setSearch } = useB2BShell();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
 
   const unreadCount = useMemo(
     () => notifications.filter((n) => n.unread).length,
@@ -143,6 +148,33 @@ export default function B2BShell({ children }: { children: ReactNode }) {
 
           {/* Right cluster */}
           <div className="flex items-center gap-1 md:gap-2 ml-auto">
+            {/* Language Switcher */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="p-2 rounded-full text-foreground hover:bg-muted transition-colors flex items-center gap-1.5"
+                  aria-label="Change language"
+                  data-testid="button-language-selector"
+                >
+                  <Globe className="w-4 h-4 md:w-5 md:h-5" strokeWidth={1.5} />
+                  <span className="text-[10px] uppercase tracking-widest font-sans hidden sm:inline">
+                    {i18n.language.toUpperCase()}
+                  </span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem onSelect={() => changeLanguage("en")}>
+                  {t("languages.en")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => changeLanguage("fr")}>
+                  {t("languages.fr")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => changeLanguage("ar")}>
+                  {t("languages.ar")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {/* Mobile search trigger */}
             <button
               onClick={() => setMobileSearchOpen((v) => !v)}
