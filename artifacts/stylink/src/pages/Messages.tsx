@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Send, Paperclip, X } from "lucide-react";
+import { Send, Paperclip, X, Ruler2 } from "lucide-react";
 import {
   mockConversations,
   getDesignerById,
@@ -7,6 +7,14 @@ import {
   Message,
   MessageAttachment,
 } from "@/data/mockData";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export default function Messages() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -134,21 +142,81 @@ export default function Messages() {
         <div className="md:col-span-2 flex flex-col">
           {active && activeDesigner ? (
             <>
-              <header className="p-5 border-b border-border flex items-center gap-3">
-                <img
-                  src={activeDesigner.image}
-                  alt={activeDesigner.name}
-                  className="w-10 h-10 object-cover"
-                />
-                <div>
-                  <p className="font-serif text-lg" data-testid="text-active-designer">
-                    {activeDesigner.name}
-                  </p>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                    {activeDesigner.type} · {activeDesigner.city}
-                  </p>
+              <header className="p-5 border-b border-border flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={activeDesigner.image}
+                    alt={activeDesigner.name}
+                    className="w-10 h-10 object-cover"
+                  />
+                  <div>
+                    <p className="font-serif text-lg" data-testid="text-active-designer">
+                      {activeDesigner.name}
+                    </p>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                      {activeDesigner.type} · {activeDesigner.city}
+                    </p>
+                  </div>
                 </div>
-              </header>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground hover:border-primary hover:text-primary transition-colors"
+                      aria-label="Voir comment mesurer à la maison"
+                    >
+                      <Ruler2 className="w-4 h-4" />
+                      Mesures
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-xl">
+                    <DialogHeader>
+                      <DialogTitle>Mesurez-vous à la maison</DialogTitle>
+                      <DialogDescription>
+                        Suivez ces étapes pour prendre vos mesures correctement et envoyer les informations au designer.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 pt-4 text-sm text-foreground">
+                      <div>
+                        <p className="font-medium">1. Tour de poitrine</p>
+                        <p className="text-muted-foreground">
+                          Mesurez horizontalement autour de la partie la plus large de votre poitrine, en gardant le mètre bien à plat.
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-medium">2. Tour de taille</p>
+                        <p className="text-muted-foreground">
+                          Mesurez autour de la taille naturelle, là où votre corps se plie lorsque vous vous penchez.
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-medium">3. Tour de hanche</p>
+                        <p className="text-muted-foreground">
+                          Mesurez autour de la partie la plus large des hanches et des fesses.
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-medium">4. Tour de bras</p>
+                        <p className="text-muted-foreground">
+                          Mesurez autour de la partie la plus ronde du bras, bras détendu le long du corps.
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-medium">5. Longueur de jambe</p>
+                        <p className="text-muted-foreground">
+                          Mesurez de la taille jusqu'à la cheville pour les pantalons, ou jusqu'à l'endroit souhaité pour une jupe ou une robe.
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-medium">Astuce</p>
+                        <p className="text-muted-foreground">
+                          Utilisez un mètre ruban souple et demandez à quelqu'un de vous aider pour obtenir des mesures précises.
+                        </p>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
 
               <div className="flex-1 p-6 space-y-4 overflow-y-auto">
                 {active.messages.map((m) => (
