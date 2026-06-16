@@ -133,6 +133,14 @@
       "filter_all": "All",
       "common_connections": "common relations"
     },
+    "opportunities": {
+      "title": "The Private Network of Algerian Fashion",
+      "subtitle": "Discover needs, capacities and collaborations shared by our partners.",
+      "publish": "Publish an opportunity",
+      "fabric": "Fabrics",
+      "none": "No opportunities",
+      "be_first": "Be the first to publish in this category."
+    },
     "sidebar": {
       "trending": "Trending",
       "tip_of_the_day": "Tip of the Day",

@@ -1,22 +1,12 @@
 import { useMemo, useState } from "react";
 import { Plus, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import OpportunityCard from "@/components/b2b/OpportunityCard";
 import OpportunityComposer from "@/components/b2b/OpportunityComposer";
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/contexts/AppStore";
 import { mockDesigners, type Opportunity } from "@/data/mockData";
 import { useB2BShell } from "@/components/b2b/B2BShellContext";
-
-const roleFilters: Array<{
-  value: "all" | Opportunity["authorRole"];
-  label: string;
-}> = [
-  { value: "all", label: "Toutes" },
-  { value: "designer", label: "Designers" },
-  { value: "atelier", label: "Ateliers" },
-  { value: "boutique", label: "Boutiques" },
-  { value: "fabric-retailer", label: "Tissus" },
-];
 
 function authorName(
   authorId: string,
@@ -27,12 +17,24 @@ function authorName(
 }
 
 export default function OpportunitiesTab() {
+  const { t } = useTranslation();
   const { opportunities, user, currentBusinessId } = useAppStore();
   const { search } = useB2BShell();
   const [filter, setFilter] = useState<"all" | Opportunity["authorRole"]>(
     "all",
   );
   const [composerOpen, setComposerOpen] = useState(false);
+
+  const roleFilters: Array<{
+    value: "all" | Opportunity["authorRole"];
+    label: string;
+  }> = [
+    { value: "all", label: t('b2b.network.filter_all') },
+    { value: "designer", label: "Designers" },
+    { value: "atelier", label: "Ateliers" },
+    { value: "boutique", label: "Boutiques" },
+    { value: "fabric-retailer", label: t('b2b.opportunities.fabric') },
+  ];
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -70,14 +72,13 @@ export default function OpportunitiesTab() {
       <header className="mb-8 flex items-end justify-between flex-wrap gap-4">
         <div>
           <p className="text-[11px] uppercase tracking-[0.22em] text-primary font-medium mb-2">
-            Opportunités
+            {t('b2b.tabs.opportunities')}
           </p>
           <h2 className="font-serif text-3xl text-foreground">
-            Le réseau privé de la mode algérienne
+            {t('b2b.opportunities.title')}
           </h2>
           <p className="text-sm text-muted-foreground font-light mt-2 max-w-2xl">
-            Découvrez besoins, capacités et collaborations partagés par nos
-            partenaires.
+            {t('b2b.opportunities.subtitle')}
           </p>
         </div>
         <Button
@@ -85,7 +86,7 @@ export default function OpportunitiesTab() {
           className="rounded-full gap-2 shadow-sm"
           data-testid="button-new-opportunity"
         >
-          <Plus className="w-4 h-4" /> Publier une opportunité
+          <Plus className="w-4 h-4" /> {t('b2b.opportunities.publish')}
         </Button>
       </header>
 
@@ -95,7 +96,7 @@ export default function OpportunitiesTab() {
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-4 h-4 text-primary" strokeWidth={1.5} />
             <h3 className="text-[11px] uppercase tracking-[0.22em] text-primary font-medium">
-              Suggéré pour vous
+              {t('b2b.network.suggested')}
             </h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -148,12 +149,12 @@ export default function OpportunitiesTab() {
       {filtered.length === 0 ? (
         <div className="bg-white rounded-2xl shadow-sm border border-black/5 py-16 text-center">
           <p className="font-serif text-xl text-foreground mb-2">
-            Aucune opportunité
+            {t('b2b.opportunities.none')}
           </p>
           <p className="text-sm text-muted-foreground font-light">
             {search.trim()
-              ? "Aucun résultat pour cette recherche."
-              : "Soyez le premier à publier dans cette catégorie."}
+              ? t('b2b.feed.empty_subtitle')
+              : t('b2b.opportunities.be_first')}
           </p>
         </div>
       ) : (

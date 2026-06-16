@@ -133,6 +133,14 @@
       "filter_all": "Tous",
       "common_connections": "relations en commun"
     },
+    "opportunities": {
+      "title": "Le réseau privé de la mode algérienne",
+      "subtitle": "Découvrez besoins, capacités et collaborations partagés par nos partenaires.",
+      "publish": "Publier une opportunité",
+      "fabric": "Tissus",
+      "none": "Aucune opportunité",
+      "be_first": "Soyez le premier à publier dans cette catégorie."
+    },
     "sidebar": {
       "trending": "À la une",
       "tip_of_the_day": "Conseil du jour",

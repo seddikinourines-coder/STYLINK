@@ -88,10 +88,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 max-w-5xl leading-[1.05] drop-shadow-lg"
+            className="text-5xl md:text-7xl lg:text-9xl font-serif text-white mb-8 max-w-6xl leading-[1.05] drop-shadow-2xl"
           >
             {t('hero.title')} <br />
-            <span className="italic font-light text-primary/90">{t('hero.title_italic')}</span>
+            <span className="italic font-light text-[#B8956A]">{t('hero.title_italic')}</span>
           </motion.h1>
 
           <motion.p
@@ -112,7 +112,7 @@ export default function Hero() {
             <Button
               asChild
               size="lg"
-              className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 font-sans tracking-[0.2em] uppercase px-12 h-14 text-sm w-full sm:w-auto"
+              className="rounded-none bg-[#B8956A] text-white hover:bg-[#B8956A]/90 font-sans tracking-[0.2em] uppercase px-12 h-14 text-sm w-full sm:w-auto"
             >
               <Link href="/shop" data-testid="button-hero-shop">
                 {t('hero.explore')}
