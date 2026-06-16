@@ -88,8 +88,8 @@ export default function Hero() {
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
             className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 max-w-5xl leading-[1.05] drop-shadow-lg"
           >
-            Où la Mode Rencontre <br />
-            <span className="italic font-light text-primary/90">le Savoir-Faire</span>
+            Because Every Part of <br />
+            <span className="italic font-light text-primary/90">Fashion Deserves Its Place</span>
           </motion.h1>
 
           <motion.p
