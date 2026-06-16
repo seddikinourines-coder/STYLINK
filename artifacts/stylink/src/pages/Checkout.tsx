@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, MapPin, User, Check, Home, Store } from "lucide-react";
+import { ArrowLeft, MapPin, User, Check, Home, Store, CreditCard } from "lucide-react";
 import { useAppStore } from "@/contexts/AppStore";
 import { mockProducts, getDesignerById } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
@@ -139,6 +139,9 @@ export default function Checkout() {
   const [wilaya, setWilaya] = useState("");
   const [commune, setCommune] = useState("");
   const [address, setAddress] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -156,6 +159,9 @@ export default function Checkout() {
     lastName.trim() &&
     phone.trim().length >= 9 &&
     wilaya &&
+    cardNumber.trim() &&
+    expiry.trim() &&
+    cvv.trim() &&
     (deliveryMode === "pickup" || (commune.trim() && address.trim()));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -331,6 +337,55 @@ export default function Checkout() {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Section: Paiement */}
+            <div className="bg-muted/30 border border-border p-8 space-y-8">
+              <div className="flex items-center gap-3">
+                <CreditCard className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
+                <p className="text-[11px] uppercase tracking-[0.3em] text-foreground font-sans">
+                  {t('checkout.payment_title')}
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase tracking-[0.2em]">{t('checkout.card_number')}</Label>
+                  <Input 
+                    value={cardNumber} 
+                    onChange={(e) => setCardNumber(e.target.value)} 
+                    placeholder="XXXX XXXX XXXX XXXX" 
+                    className="bg-background"
+                    required 
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-[0.2em]">{t('checkout.expiry_date')}</Label>
+                    <Input 
+                      value={expiry} 
+                      onChange={(e) => setExpiry(e.target.value)} 
+                      placeholder="MM/AA" 
+                      className="bg-background"
+                      required 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-[0.2em]">{t('checkout.cvv')}</Label>
+                    <Input 
+                      value={cvv} 
+                      onChange={(e) => setCvv(e.target.value)} 
+                      placeholder="XXX" 
+                      className="bg-background"
+                      required 
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-xs text-muted-foreground font-light italic">
+                {t('checkout.payment_security')}
+              </p>
             </div>
           </form>
 

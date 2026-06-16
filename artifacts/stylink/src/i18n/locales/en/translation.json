@@ -69,6 +69,11 @@
     "choose_wilaya": "Choose a wilaya...",
     "commune": "Commune",
     "full_address": "Full Address",
+    "payment_title": "Payment by Card",
+    "card_number": "Card Number",
+    "expiry_date": "Expiry Date",
+    "cvv": "CVV Code",
+    "payment_security": "Your banking data is encrypted and secure. We accept CIB and EDAHABIA cards.",
     "summary": "Summary",
     "subtotal": "Subtotal",
     "delivery": "Delivery",
@@ -79,7 +84,13 @@
     "thank_you": "Thank you, {{name}}!",
     "confirmation_msg": "Your order has been registered. You will receive a confirmation on {{contact}}.",
     "estimated_delivery": "Estimated delivery time: {{days}}",
-    "back_to_home": "Back to Home"
+    "back_to_home": "Back to Home",
+    "zone_1": "North / Center",
+    "zone_2": "High Plateaus",
+    "zone_3": "Deep South",
+    "days_2_3": "2 to 3 business days",
+    "days_3_5": "3 to 5 business days",
+    "days_5_7": "5 to 7 business days"
   },
   "languages": {
     "en": "English",
