@@ -177,44 +177,84 @@ export default function Messages() {
                         Suivez ces étapes pour prendre vos mesures correctement et envoyer les informations au designer.
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="space-y-4 pt-4 text-sm text-foreground">
-                      <div>
-                        <p className="font-medium">1. Tour de poitrine</p>
-                        <p className="text-muted-foreground">
-                          Mesurez horizontalement autour de la partie la plus large de votre poitrine, en gardant le mètre bien à plat.
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium">2. Tour de taille</p>
-                        <p className="text-muted-foreground">
-                          Mesurez autour de la taille naturelle, là où votre corps se plie lorsque vous vous penchez.
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium">3. Tour de hanche</p>
-                        <p className="text-muted-foreground">
-                          Mesurez autour de la partie la plus large des hanches et des fesses.
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium">4. Tour de bras</p>
-                        <p className="text-muted-foreground">
-                          Mesurez autour de la partie la plus ronde du bras, bras détendu le long du corps.
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium">5. Longueur de jambe</p>
-                        <p className="text-muted-foreground">
-                          Mesurez de la taille jusqu'à la cheville pour les pantalons, ou jusqu'à l'endroit souhaité pour une jupe ou une robe.
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium">Astuce</p>
-                        <p className="text-muted-foreground">
-                          Utilisez un mètre ruban souple et demandez à quelqu'un de vous aider pour obtenir des mesures précises.
-                        </p>
-                      </div>
+                    <div className="overflow-x-auto pt-4">
+                    <table className="w-full min-w-[680px] border-separate border-spacing-y-2 text-sm text-foreground">
+                      <thead>
+                        <tr className="text-left text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+                          <th className="px-3 py-2">#</th>
+                          <th className="px-3 py-2">Zone de mesure</th>
+                          <th className="px-3 py-2 text-center">Illustration</th>
+                          <th className="px-3 py-2">Comment mesurer</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="bg-background/80 rounded-lg border border-border">
+                          <td className="px-3 py-4 font-semibold">1</td>
+                          <td className="px-3 py-4 font-medium">Tour de poitrine</td>
+                          <td className="px-3 py-4">
+                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-muted text-xs text-muted-foreground">
+                              1
+                            </div>
+                          </td>
+                          <td className="px-3 py-4 text-muted-foreground">
+                            Mesurez autour de la partie la plus large de votre poitrine, en gardant le mètre bien horizontal.
+                          </td>
+                        </tr>
+                        <tr className="bg-background/80 rounded-lg border border-border">
+                          <td className="px-3 py-4 font-semibold">2</td>
+                          <td className="px-3 py-4 font-medium">Tour de taille</td>
+                          <td className="px-3 py-4">
+                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-muted text-xs text-muted-foreground">
+                              2
+                            </div>
+                          </td>
+                          <td className="px-3 py-4 text-muted-foreground">
+                            Mesurez au niveau de votre taille naturelle, là où le corps se plie lorsque vous vous penchez.
+                          </td>
+                        </tr>
+                        <tr className="bg-background/80 rounded-lg border border-border">
+                          <td className="px-3 py-4 font-semibold">3</td>
+                          <td className="px-3 py-4 font-medium">Tour de hanche</td>
+                          <td className="px-3 py-4">
+                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-muted text-xs text-muted-foreground">
+                              3
+                            </div>
+                          </td>
+                          <td className="px-3 py-4 text-muted-foreground">
+                            Mesurez autour de la partie la plus large des hanches et des fesses.
+                          </td>
+                        </tr>
+                        <tr className="bg-background/80 rounded-lg border border-border">
+                          <td className="px-3 py-4 font-semibold">4</td>
+                          <td className="px-3 py-4 font-medium">Tour de bras</td>
+                          <td className="px-3 py-4">
+                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-muted text-xs text-muted-foreground">
+                              4
+                            </div>
+                          </td>
+                          <td className="px-3 py-4 text-muted-foreground">
+                            Mesurez la partie la plus ronde du bras, bras détendu le long du corps.
+                          </td>
+                        </tr>
+                        <tr className="bg-background/80 rounded-lg border border-border">
+                          <td className="px-3 py-4 font-semibold">5</td>
+                          <td className="px-3 py-4 font-medium">Longueur de jambe</td>
+                          <td className="px-3 py-4">
+                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-muted text-xs text-muted-foreground">
+                              5
+                            </div>
+                          </td>
+                          <td className="px-3 py-4 text-muted-foreground">
+                            Mesurez de la taille jusqu'à la cheville ou jusqu'à la longueur souhaitée pour une jupe ou une robe.
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div className="mt-4 rounded-lg border border-border bg-muted/80 p-4 text-sm text-muted-foreground">
+                      <strong className="block mb-2 text-foreground">Astuce du designer</strong>
+                      Utilisez un mètre ruban souple et demandez à quelqu'un de vous aider pour une mesure précise. Gardez le mètre bien à plat, sans trop serrer.
                     </div>
+                  </div>
                   </DialogContent>
                   </Dialog>
                 </header>
