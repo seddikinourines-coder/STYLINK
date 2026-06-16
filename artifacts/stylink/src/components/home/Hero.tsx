@@ -81,7 +81,7 @@ export default function Hero() {
             className="text-6xl md:text-8xl lg:text-[110px] font-serif text-white mb-8 max-w-6xl leading-[0.9] drop-shadow-2xl flex flex-col items-center"
           >
             <span className="tracking-tight">{t('hero.title')}</span>
-            <span className="italic font-light text-[#B8956A] mt-[-0.15em] lowercase">{t('hero.title_italic')}</span>
+            <span className="italic font-light text-[#B8956A] mt-[-0.15em]">{t('hero.title_italic')}</span>
           </motion.h1>
 
           <motion.p
