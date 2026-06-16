@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
-import { MapPin, Home, User as UserIcon, Plus, Minus } from "lucide-material";
+import { MapPin, Home, User as UserIcon, Plus, Minus } from "lucide-react";
 import { mockDesigners, Designer } from "@/data/mockData";
 import { useAppStore } from "@/contexts/AppStore";
 import { ALGERIA_WILAYAS } from "@/data/wilayas";
