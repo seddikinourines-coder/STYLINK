@@ -45,6 +45,7 @@ export default function Messages() {
     e.preventDefault();
     if ((!draft.trim() && !attachment) || !active) return;
 
+    const attachmentToSend = attachment;
     const newMsg: Message = {
       id: `m${Date.now()}`,
       sender: "me",
@@ -53,7 +54,7 @@ export default function Messages() {
         hour: "2-digit",
         minute: "2-digit",
       }),
-      attachment: attachment ?? undefined,
+      attachment: attachmentToSend ?? undefined,
     };
 
     setConversations((prev) =>
@@ -69,7 +70,7 @@ export default function Messages() {
       ),
     );
     setDraft("");
-    handleRemoveAttachment();
+    setAttachment(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
