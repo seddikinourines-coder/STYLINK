@@ -26,17 +26,17 @@ export default function MeasurementGuide() {
       {/* Table */}
       <div className="border border-border overflow-hidden">
         {/* Column headers */}
-        <div className="grid grid-cols-[2.5rem_1fr_5rem_1fr] bg-muted/50 border-b border-border">
-          <div className="p-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground text-center border-r border-border">#</div>
-          <div className="p-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground border-r border-border">Zone de Mesure</div>
-          <div className="p-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground text-center border-r border-border">Instructions Visuelles</div>
-          <div className="p-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Comment Mesurer</div>
+        <div className="grid grid-cols-[2.5rem_1fr_6.5rem_1.2fr] bg-muted/50 border-b border-border">
+          <div className="p-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground text-center border-r border-border flex items-center justify-center">#</div>
+          <div className="p-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground border-r border-border flex items-center">Zone de Mesure</div>
+          <div className="p-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground text-center border-r border-border flex items-center justify-center leading-tight">Instructions Visuelles</div>
+          <div className="p-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground flex items-center leading-tight">Comment Mesurer</div>
         </div>
 
         {ROWS.map((row, i) => (
           <div
             key={row.zone}
-            className={`grid grid-cols-[2.5rem_1fr_5rem_1fr] border-b border-border last:border-b-0 ${i % 2 === 0 ? "" : "bg-muted/20"}`}
+            className={`grid grid-cols-[2.5rem_1fr_6.5rem_1.2fr] border-b border-border last:border-b-0 ${i % 2 === 0 ? "" : "bg-muted/20"}`}
           >
             {/* Number */}
             <div className="p-3 flex items-center justify-center border-r border-border">
