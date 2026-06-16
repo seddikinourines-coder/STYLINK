@@ -15,31 +15,23 @@ export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
 
-  // Container is 180vh tall → ~80vh of "pinned" scroll where the hero stays
-  // visible while we drive parallax + blur + scale transforms.
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  // Background image translates slower than scroll (parallax)
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
-  // Image gently zooms in for depth
   const imageScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.18]);
-  // Image fades out
   const imageOpacity = useTransform(
     scrollYProgress,
     [0, 0.7, 1],
     [0.95, 0.55, 0.35],
   );
-  // Content drifts up & fades
   const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "-25%"]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.5, 0.8], [1, 0.7, 0]);
-  // Hero pull-up effect — gentle compression as next section approaches
   const heroScale = useTransform(scrollYProgress, [0.5, 1], [1, 0.94]);
   const heroRadius = useTransform(scrollYProgress, [0.5, 1], [0, 32]);
 
-  // Skip transforms when user prefers reduced motion
   const motionStyles = reduced
     ? {}
     : { scale: heroScale, borderBottomLeftRadius: heroRadius, borderBottomRightRadius: heroRadius };
@@ -54,7 +46,6 @@ export default function Hero() {
         className="sticky top-0 h-[100dvh] min-h-[700px] overflow-hidden bg-secondary will-change-transform"
         style={{ ...motionStyles, transformOrigin: "center top" }}
       >
-        {/* Full-bleed parallax background */}
         <motion.div
           className="absolute inset-0 z-0 will-change-transform"
           style={reduced ? {} : { y: imageY, scale: imageScale }}
@@ -70,7 +61,6 @@ export default function Hero() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-background/90 mix-blend-multiply" />
         </motion.div>
 
-        {/* Editorial Content */}
         <motion.div
           className="relative z-10 h-full container px-4 flex flex-col items-center justify-center text-center"
           style={reduced ? {} : { y: contentY, opacity: contentOpacity }}
@@ -88,17 +78,17 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 max-w-5xl leading-[1.1] drop-shadow-xl"
+            className="text-6xl md:text-8xl lg:text-[110px] font-serif text-white mb-8 max-w-6xl leading-[0.9] drop-shadow-2xl flex flex-col items-center"
           >
-            <span className="block mb-2">{t('hero.title')}</span>
-            <span className="italic font-light text-[#B8956A] block mt-[-0.2em]">{t('hero.title_italic')}</span>
+            <span className="tracking-tight">{t('hero.title')}</span>
+            <span className="italic font-light text-[#B8956A] mt-[-0.15em] lowercase">{t('hero.title_italic')}</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
-            className="text-white/85 text-lg md:text-xl max-w-2xl mb-12 font-sans font-light leading-relaxed"
+            className="text-white/85 text-lg md:text-xl max-w-3xl mb-12 font-sans font-light leading-relaxed"
           >
             {t('hero.description')}
           </motion.p>
@@ -131,7 +121,6 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* Scroll Indicator */}
         <motion.div
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-3"
           style={reduced ? {} : { opacity: contentOpacity }}
