@@ -2,31 +2,35 @@ import { useEffect, useState } from "react";
 import { Link, useRoute } from "wouter";
 import { ArrowLeft, Package, MapPin, Tag } from "lucide-react";
 import NotFound from "@/pages/not-found";
+import { mockDesigners, mockProducts } from "@/data/mockData";
 
 const API = "/api";
 
 interface Product {
-  id: number;
+  id: string | number;
   name: string;
   description: string | null;
-  price: string;
+  price: string | number;
   category: string | null;
   image_url: string | null;
+  image?: string; // from mock data
 }
 
 interface BusinessDetail {
-  id: number;
+  id: string | number;
   name: string;
   contact_name: string | null;
   city: string | null;
   role: string | null;
   bio: string | null;
   avatar_url: string | null;
+  image?: string; // from mock data
   products: Product[];
 }
 
-function parseImages(raw: string | null): string[] {
+function parseImages(raw: any): string[] {
   if (!raw) return [];
+  if (Array.isArray(raw)) return raw;
   try { return JSON.parse(raw); } catch { return [raw]; }
 }
 
@@ -38,14 +42,68 @@ export default function BoutiqueProfile() {
     if (!params?.id) return;
     fetch(`${API}/businesses/${params.id}`)
       .then((r) => r.ok ? r.json() : null)
-      .then(setBusiness)
-      .catch(() => setBusiness(null));
+      .then((data) => {
+        if (data) {
+          setBusiness(data);
+        } else {
+          // Fallback to mock data
+          const mock = mockDesigners.find(d => d.id === params.id);
+          if (mock) {
+            const designerProducts = mockProducts.filter(p => p.designerId === mock.id).map(p => ({
+              id: p.id,
+              name: p.name,
+              description: p.description,
+              price: p.price,
+              category: p.category,
+              image_url: p.image
+            }));
+            setBusiness({
+              id: mock.id,
+              name: mock.name,
+              contact_name: null,
+              city: mock.city,
+              role: mock.type,
+              bio: mock.bio,
+              avatar_url: mock.image,
+              products: designerProducts
+            });
+          } else {
+            setBusiness(null);
+          }
+        }
+      })
+      .catch(() => {
+        // Fallback on error
+        const mock = mockDesigners.find(d => d.id === params.id);
+        if (mock) {
+          const designerProducts = mockProducts.filter(p => p.designerId === mock.id).map(p => ({
+            id: p.id,
+            name: p.name,
+            description: p.description,
+            price: p.price,
+            category: p.category,
+            image_url: p.image
+          }));
+          setBusiness({
+            id: mock.id,
+            name: mock.name,
+            contact_name: null,
+            city: mock.city,
+            role: mock.type,
+            bio: mock.bio,
+            avatar_url: mock.image,
+            products: designerProducts
+          });
+        } else {
+          setBusiness(null);
+        }
+      });
   }, [params?.id]);
 
   if (business === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground font-light">Chargement…</p>
+        <p className="text-muted-foreground font-light">Loading…</p>
       </div>
     );
   }
@@ -59,9 +117,9 @@ export default function BoutiqueProfile() {
         <div className="grid grid-cols-1 md:grid-cols-12 min-h-[480px]">
           {/* Avatar / cover */}
           <div className="md:col-span-5 relative aspect-[3/4] md:aspect-auto overflow-hidden">
-            {business.avatar_url ? (
+            {(business.avatar_url || business.image) ? (
               <img
-                src={business.avatar_url}
+                src={business.avatar_url || business.image}
                 alt={business.name}
                 className="absolute inset-0 w-full h-full object-cover object-center"
               />
@@ -80,7 +138,7 @@ export default function BoutiqueProfile() {
               href="/boutiques"
               className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-foreground/80 hover:text-primary mb-6 self-start"
             >
-              <ArrowLeft className="w-4 h-4" /> Toutes les boutiques
+              <ArrowLeft className="w-4 h-4" /> All boutiques
             </Link>
 
             <div className="flex flex-wrap gap-3 mb-4">
@@ -119,7 +177,7 @@ export default function BoutiqueProfile() {
               Collection
             </p>
             <h2 className="font-serif text-4xl text-foreground">
-              Articles en boutique
+              Boutique Articles
             </h2>
           </div>
           <span className="text-sm text-muted-foreground font-light">
@@ -131,16 +189,16 @@ export default function BoutiqueProfile() {
           <div className="py-24 text-center border border-dashed border-border">
             <Package className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" strokeWidth={1} />
             <h3 className="font-serif text-2xl text-foreground mb-2">
-              Aucun article pour l'instant
+              No articles yet
             </h3>
             <p className="text-muted-foreground font-light text-sm">
-              {business.name} n'a pas encore ajouté d'articles.
+              {business.name} hasn't added any articles yet.
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
             {business.products.map((p) => {
-              const images = parseImages(p.image_url);
+              const images = parseImages(p.image_url || p.image);
               const thumb = images[0] ?? null;
               return (
                 <Link key={p.id} href={`/products/${p.id}`} className="group block">
@@ -172,7 +230,7 @@ export default function BoutiqueProfile() {
                     <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{p.description}</p>
                   )}
                   <p className="text-sm font-medium">
-                    {Number(p.price).toLocaleString("fr-DZ")} DZD
+                    {Number(p.price).toLocaleString()} DA
                   </p>
                 </Link>
               );

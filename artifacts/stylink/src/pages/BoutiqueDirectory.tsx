@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Search, Heart, SlidersHorizontal } from "lucide-react";
 import { useAppStore } from "@/contexts/AppStore";
 import { useToast } from "@/hooks/use-toast";
+import { mockDesigners, mockProducts } from "@/data/mockData";
 import {
   Select,
   SelectContent,
@@ -14,23 +15,25 @@ import {
 const API = "/api";
 
 interface Business {
-  id: number;
+  id: string | number;
   name: string;
-  contact_name: string | null;
+  contact_name?: string | null;
   city: string | null;
   role: string | null;
   bio: string | null;
-  avatar_url: string | null;
+  avatar_url?: string | null;
+  image?: string; // from mock data
   min_price?: string | number | null;
   max_price?: string | number | null;
   product_count?: number;
 }
 
 function Avatar({ business }: { business: Business }) {
-  if (business.avatar_url) {
+  const avatar = business.avatar_url || business.image;
+  if (avatar) {
     return (
       <img
-        src={business.avatar_url}
+        src={avatar}
         alt={business.name}
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
       />
@@ -59,8 +62,48 @@ export default function BoutiqueDirectory() {
   useEffect(() => {
     fetch(`${API}/businesses`)
       .then((r) => r.ok ? r.json() : [])
-      .then((data) => setBusinesses(Array.isArray(data) ? data : []))
-      .catch(() => {})
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setBusinesses(data);
+        } else {
+          // Fallback to mock data if API is empty or fails
+          const transformedMocks: Business[] = mockDesigners.map(d => {
+            const designerProducts = mockProducts.filter(p => p.designerId === d.id);
+            const prices = designerProducts.map(p => p.price);
+            return {
+              id: d.id,
+              name: d.name,
+              city: d.city,
+              role: d.type,
+              bio: d.bio,
+              image: d.image,
+              min_price: prices.length > 0 ? Math.min(...prices) : null,
+              max_price: prices.length > 0 ? Math.max(...prices) : null,
+              product_count: designerProducts.length
+            };
+          });
+          setBusinesses(transformedMocks);
+        }
+      })
+      .catch(() => {
+        // Fallback on error
+        const transformedMocks: Business[] = mockDesigners.map(d => {
+          const designerProducts = mockProducts.filter(p => p.designerId === d.id);
+          const prices = designerProducts.map(p => p.price);
+          return {
+            id: d.id,
+            name: d.name,
+            city: d.city,
+            role: d.type,
+            bio: d.bio,
+            image: d.image,
+            min_price: prices.length > 0 ? Math.min(...prices) : null,
+            max_price: prices.length > 0 ? Math.max(...prices) : null,
+            product_count: designerProducts.length
+          };
+        });
+        setBusinesses(transformedMocks);
+      })
       .finally(() => setLoading(false));
   }, []);
 
