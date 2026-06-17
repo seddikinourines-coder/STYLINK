@@ -114,7 +114,7 @@ export default function FashionMap() {
           <h2 className="text-sm font-medium text-amber-500 uppercase tracking-widest mb-4">
             {t("map.subtitle", "The Map")}
           </h2>
-          <h3 className="text-4xl md:text-5xl font-serif text-cream-50 mb-6">
+          <h3 className="text-4xl md:text-5xl font-serif text-white mb-6">
             {t("map.title", "Fashion rooted in the territory")}
           </h3>
           <p className="text-slate-400 max-w-2xl mx-auto">
