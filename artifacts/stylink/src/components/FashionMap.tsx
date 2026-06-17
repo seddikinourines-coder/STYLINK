@@ -346,7 +346,7 @@ export default function FashionMap() {
                   {selectedCluster.designers.map((designer) => (
                     <Link
                       key={designer.id}
-                      to={`/designer/${designer.id}`}
+                      href={`/boutiques/${designer.id}`}
                       className="flex items-center gap-6 group cursor-pointer hover:bg-slate-50 p-3 rounded-2xl transition-all"
                     >
                       <div className="relative">
